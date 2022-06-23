@@ -1,10 +1,8 @@
 #pragma once
 
-#include <phpcpp.h>
+#include <includes.h>
 
 #include <iostream>
-
-#include <fusion/database/core.cpp>
 
 class Engine : public Php::Base {
     public: Engine() {}

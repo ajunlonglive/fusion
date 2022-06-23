@@ -1,6 +1,4 @@
-#include <phpcpp.h>
-#include <fusion/cores/engine/engine.cpp>
-
+#include <includes.h>
 
 /**
  *  tell the compiler that the get_module is a pure C function
