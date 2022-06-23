@@ -7,16 +7,16 @@
 #include <fusion/database/core.cpp>
 
 class Engine : public Php::Base {
-    public: void static Foo() {
-        Database::set::string({"hello_worldk", "foo", "bar"}, "hello world");
-    }   
+    public: Engine() {}
+    public: virtual ~Engine() {}
+    public: void static Framework() {
+        Php::Value arr_list;
+        arr_list["foo"] = "bar?";
+        arr_list["bar"] = "foo?";
 
-    public: Php::Value static Bar() {
-        Php::Value doo = Database::get::string({"hello_worldk", "foo", "bar"});
-        return doo;
+        Database::set::array({"Hello", "Guys"}, arr_list);
+        Php::Value get_arr_list = Database::get::array({"Hello", "Guys"});
+        Php::out << get_arr_list["foo"] << " yes " << std::flush;
     }
 
-    public: void static Hapus() {
-        Database::unset({"hello_worldk"});
-    }
 };
