@@ -24,6 +24,8 @@ extern "C" {
 
 
         engine.method<&Engine::Foo>("Foo", {});
+        engine.method<&Engine::Bar>("Bar", {});
+        engine.method<&Engine::Hapus>("Hapus", {});
 
 
         // adding class to namespace

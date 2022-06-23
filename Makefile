@@ -85,7 +85,10 @@ LINKER				=	g++
 #	with a list of all flags that should be passed to the linker.
 #
 
-COMPILER_FLAGS		=	-Wall -c -O2 -std=c++11 -fpic -o
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+mkfile_dir  := $(dir $(mkfile_path))
+
+COMPILER_FLAGS		=	-Wall -c -O2 -std=c++17 -I/${mkfile_dir} -fpic -o
 LINKER_FLAGS		=	-shared
 LINKER_DEPENDENCIES	=	-lphpcpp
 
