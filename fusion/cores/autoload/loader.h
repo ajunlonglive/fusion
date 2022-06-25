@@ -25,10 +25,14 @@ class loader : public Php::Base {
         }
     }
 
-    private: void static require_src(Php::Value p_directory) {
+    private: void static require_src(Php::Value p_directory, bool only_once) {
         std::string directory = p_directory;
-        list_files(directory, [](const std::string &path) {
-            Php::require_once(path);
+        list_files(directory, [&](const std::string &path) {
+            if(only_once) {
+                Php::require_once(path);
+            } else {
+                Php::require(path);
+            }
         });
     }
 
@@ -52,15 +56,15 @@ class loader : public Php::Base {
         // Register the config as startup used for require_src
         Php::Value app_config = Database::get::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
 
-        require_src(app_config["FS_MVC_Client_Dir"]["Controllers"]);   
-        require_src(app_config["FS_MVC_Client_Dir"]["Models"]);
-        require_src(app_config["FS_MVC_Client_Dir"]["Views"]);
+        require_src(app_config["FS_MVC_Client_Dir"]["Controllers"], true);   
+        require_src(app_config["FS_MVC_Client_Dir"]["Models"], true);
+        require_src(app_config["FS_MVC_Client_Dir"]["Views"], true);
         
     }
 
     public: void static route() {
         Php::Value app_config = Database::get::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
-        require_src(app_config["FS_Routes_Client_Dir"]);
+        require_src(app_config["FS_Routes_Client_Dir"], false);
     }
 
 };

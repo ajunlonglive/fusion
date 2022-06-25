@@ -5,6 +5,7 @@
 #include <fusion/cores/autoload/autoload.cpp>
 #include <fusion/error/message.cpp>
 #include <fusion/const/construct.cpp>
+#include <fusion/dest/destruct.cpp>
 
 #include <iostream>
 #include <sstream>
@@ -23,8 +24,8 @@ class Engine : public Php::Base {
 
     public: void static Run() {
         Engine __construct;
-
-        Autoload::route();
+        
+        Destruct::route_init();
     }
 
 };

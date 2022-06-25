@@ -26,7 +26,8 @@ class Route : public Php::Base {
 
         RouteService::web::patch(uri_route);
         
-        RouteService::web::assign(uri_route, handler_opt);
-
+        if(!Database::get::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"})) {
+            RouteService::web::assign(uri_route, handler_opt);
+        }
     }
 };

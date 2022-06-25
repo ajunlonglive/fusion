@@ -34,9 +34,5 @@ class Autoload : public Php::Base {
         // Register the config as startup used for require_src
         loader::boot();
     }
-
-    public: void static route() {
-        loader::route();
-    }
-
+    
 };

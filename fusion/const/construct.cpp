@@ -29,6 +29,9 @@ namespace Construct {
     
     void route_init() {
         std::string Request_Uri = Php::eval("return $_SERVER['REQUEST_URI'];").stringValue();       
+        
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}, Request_Uri); 
+        Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
+        
     }
 }
