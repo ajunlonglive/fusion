@@ -1,20 +1,30 @@
 #pragma once
 
-#include <includes.h>
+#include <phpcpp.h>
+#include <fusion/database/core.cpp>
+#include <fusion/cores/autoload/autoload.cpp>
+#include <fusion/error/message.cpp>
+#include <fusion/const/construct.cpp>
 
 #include <iostream>
+#include <sstream>
 
 class Engine : public Php::Base {
-    public: Engine() {}
-    public: virtual ~Engine() {}
-    public: void static Framework() {
-        Php::Value arr_list;
-        arr_list["foo"] = "bar?";
-        arr_list["bar"] = "foo?";
+    public: Engine() {
+        Construct::framework();
+    } 
 
-        Database::set::array({"Hello", "Guys"}, arr_list);
-        Php::Value get_arr_list = Database::get::array({"Hello", "Guys"});
-        Php::out << get_arr_list["foo"] << " yes " << std::flush;
+    public: virtual ~Engine() {}
+
+    public: void static Framework(Php::Parameters &param) {
+        Construct::framework_init(param);
+        Construct::route_init();
+    }
+
+    public: void static Run() {
+        Engine __construct;
+
+        Autoload::route();
     }
 
 };

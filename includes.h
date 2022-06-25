@@ -13,4 +13,6 @@
 #include <phpcpp.h>
 
 #include <fusion/cores/engine/engine.cpp>
-#include <fusion/database/core.cpp>
+#include <fusion/cores/autoload/autoload.cpp>   
+#include <fusion/controllers/route/route.cpp>
+#include <fusion/controllers/controller/controller.cpp>

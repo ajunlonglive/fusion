@@ -19,13 +19,33 @@ extern "C" {
         Php::Namespace fusion("Fusion");
 
         Php::Class<Engine> engine("Cores\\Engine");
+        Php::Class<Autoload> autoload("Cores\\Autoload");
+        Php::Class<Route> route("Controllers\\Route");
+        Php::Class<Controller> controller("Controllers\\Controller");
+        Php::Class<Request> request("Http\\Request");
 
 
         engine.method<&Engine::Framework>("Framework", {});
+        engine.method<&Engine::Run>("Run", {});
 
+        autoload.method<&Autoload::Config>("Config", {});
+        autoload.method<&Autoload::Register>("Register", {});
+
+        route.method<&Route::Get>("Get", {});
+
+        controller.method<&Controller::Class>("Class", {});
+
+        request.method<&Request::Foo>("Foo", {});
 
         // adding class to namespace
         fusion.add(std::move(engine));
+        fusion.add(std::move(autoload));
+        fusion.add(std::move(route));
+        fusion.add(std::move(controller));
+        fusion.add(std::move(request));
+
+        extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
+        extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
 
         // wrapped namespace, add to extension
         extension.add(std::move(fusion));
