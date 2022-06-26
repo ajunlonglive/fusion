@@ -5,6 +5,7 @@
 #include <fusion/database/core.cpp>
 #include <fusion/error/message.cpp>
 #include <fusion/http/request/request.cpp>
+#include <fusion/regex/route.cpp>
 
 #include <iostream>
 
@@ -19,12 +20,13 @@ namespace RouteService {
 
         public: void static patch(std::string uri_route) {
             v_double(uri_route);
+
             Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"}, uri_route);
         }
 
         public: Php::Value static assign(std::string uri_route, Php::Value handler_opt) {
             std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
-
+            Php::out << uri_route << " : " << request_uri << "<br/>" << std::flush;
             if(uri_route != request_uri)
                 return 0;
 

@@ -3,6 +3,7 @@
 #include <phpcpp.h>
 #include <fusion/database/core.cpp>
 #include <fusion/error/message.cpp>
+#include <fusion/regex/route.cpp>
 
 #include <iostream>
 
@@ -28,10 +29,11 @@ namespace Construct {
     }
     
     void route_init() {
-        std::string Request_Uri = Php::eval("return $_SERVER['REQUEST_URI'];").stringValue();       
+        std::string Request_Uri = Php::eval("return $_SERVER['REQUEST_URI'].'/';").stringValue();       
+
+        std::string escape_request_uri = Regex::uri::escape_request_uri(Request_Uri);
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}, escape_request_uri); 
         
-        Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}, Request_Uri); 
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
-        
     }
 }

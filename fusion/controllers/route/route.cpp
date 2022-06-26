@@ -4,6 +4,7 @@
 
 #include <fusion/const/construct.cpp>
 #include <fusion/controllers/route/service.cpp>
+#include <fusion/regex/route.cpp>
 
 #include <iostream>
 
@@ -22,12 +23,13 @@ class Route : public Php::Base {
             Error::message::many_route_get_param();
 
         std::string uri_route   = param[0];
+        std::string escape_uri_route = Regex::uri::escape_request_uri(uri_route + "/");
         Php::Value handler_opt  = param[1];
 
-        RouteService::web::patch(uri_route);
+        RouteService::web::patch(escape_uri_route);
         
         if(!Database::get::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"})) {
-            RouteService::web::assign(uri_route, handler_opt);
+            RouteService::web::assign(escape_uri_route, handler_opt);
         }
     }
 };

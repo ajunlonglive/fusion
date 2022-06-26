@@ -16,3 +16,4 @@
 #include <fusion/cores/autoload/autoload.cpp>   
 #include <fusion/controllers/route/route.cpp>
 #include <fusion/controllers/controller/controller.cpp>
+#include <fusion/http/request/input-capture.h>

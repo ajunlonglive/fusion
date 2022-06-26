@@ -1,12 +1,11 @@
 #pragma once
-
 #include <phpcpp.h>
+
+#include <fusion/database/core.cpp>
 
 #include <string>
 #include <functional>
 #include <dirent.h>
-
-// #include <fusion/cores/autoload/loader.h>
 
 class loader : public Php::Base {
     private: void static list_files(const std::string &path, std::function<void(const std::string &)> cb) {

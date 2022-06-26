@@ -23,7 +23,7 @@ extern "C" {
         Php::Class<Route> route("Controllers\\Route");
         Php::Class<Controller> controller("Controllers\\Controller");
         Php::Class<Request> request("Http\\Request");
-
+        // Php::Class<InputCapture> inputcapture("Utils\\InputCapture");
 
         engine.method<&Engine::Framework>("Framework", {});
         engine.method<&Engine::Run>("Run", {});
@@ -35,7 +35,9 @@ extern "C" {
 
         controller.method<&Controller::Class>("Class", {});
 
-        request.method<&Request::Foo>("Foo", {});
+        request.method<&Request::input>("input", {});
+
+        // inputcapture.method<&InputCapture::is_capturable>("is_capturable", {});
 
         // adding class to namespace
         fusion.add(std::move(engine));
@@ -43,6 +45,7 @@ extern "C" {
         fusion.add(std::move(route));
         fusion.add(std::move(controller));
         fusion.add(std::move(request));
+        // fusion.add(std::move(inputcapture));
 
         extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
