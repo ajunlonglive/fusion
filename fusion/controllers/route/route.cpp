@@ -27,9 +27,11 @@ class Route : public Php::Base {
         Php::Value handler_opt  = param[1];
 
         RouteService::web::patch(escape_uri_route);
-        
+        SmartRouter::catch_uri_parse(escape_uri_route);
+
         if(!Database::get::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"})) {
             RouteService::web::assign(escape_uri_route, handler_opt);
         }
+
     }
 };

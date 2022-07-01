@@ -26,6 +26,7 @@ class Engine : public Php::Base {
         Engine __construct;
         
         Destruct::route_init();
+        Destruct::session_reset();
     }
 
 };

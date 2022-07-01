@@ -6,27 +6,23 @@
 #include <fusion/error/message.cpp>
 #include <fusion/http/request/request.cpp>
 #include <fusion/regex/route.cpp>
+#include <fusion/http/request/input-capture.h>
+#include <fusion/controllers/route/smart.h>
 
 #include <iostream>
 
 namespace RouteService {
     class web : public Php::Base {
-        public: void static v_double(std::string uri_route) {
-            Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
-            if(Php::call("in_array", uri_route, web_route_list).boolValue()) {
-                Php::error << " Sudah ada jalur router itu mas " << std::flush;
-            }
-        }
 
         public: void static patch(std::string uri_route) {
-            v_double(uri_route);
-
+            SmartRouter::v_double(uri_route);
+            
             Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"}, uri_route);
         }
 
         public: Php::Value static assign(std::string uri_route, Php::Value handler_opt) {
             std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
-            Php::out << uri_route << " : " << request_uri << "<br/>" << std::flush;
+
             if(uri_route != request_uri)
                 return 0;
 
@@ -48,9 +44,7 @@ namespace RouteService {
 
             if(Php::call("is_callable", handler_opt).boolValue()) { // Router handler with callback action, injected Request as param
                 Request *request = new Request;
-
                 handler_opt(Php::Object("Fusion\\Http\\Request", request));
-
                 return 0;
             }
 

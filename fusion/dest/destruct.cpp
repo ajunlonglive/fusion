@@ -4,6 +4,8 @@
 #include <fusion/database/core.cpp>
 #include <fusion/cores/autoload/loader.h>
 #include <fusion/controllers/route/service.cpp>
+#include <fusion/controllers/route/smart.h>
+#include <fusion/dest/destruct.cpp>
 
 class Destruct : public Php::Base {
     /**
@@ -16,5 +18,10 @@ class Destruct : public Php::Base {
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, false); // if not found, reset data
         RouteService::web::reset_route_list(); // reset web route list
         loader::route(); // run again for first router initiliazed
+        SmartRouter::smart_uri_validator();
+    }
+
+    public: void static session_reset() {
+        Php::call("session_destroy");
     }
 };

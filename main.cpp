@@ -34,7 +34,6 @@ extern "C" {
         route.method<&Route::Get>("Get", {});
 
         controller.method<&Controller::Class>("Class", {});
-
         request.method<&Request::input>("input", {});
 
         // inputcapture.method<&InputCapture::is_capturable>("is_capturable", {});

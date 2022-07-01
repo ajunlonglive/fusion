@@ -71,6 +71,18 @@ namespace Database {
             Php::eval("$_SESSION" +merge_array_index+ "[] = " +value+ ";");
         }
 
+        public: void static push_array_array(std::vector<std::string> array_index, Php::Value value) {
+            std::string merge_array_index = "";
+            
+            for(auto &index: array_index) {
+                merge_array_index += "['" +index+ "']";
+            }   
+            
+            std::string v_value = Php::call("json_encode", value);
+
+            Php::eval("$_SESSION" +merge_array_index+ "[] = json_decode('" +v_value+ "', true);");
+        }
+
         public: void static empty_array(std::vector<std::string> array_index) {
             std::string merge_array_index = "";
             

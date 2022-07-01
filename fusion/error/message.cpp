@@ -11,6 +11,12 @@ std::string cout(std::string messages) {
 
 namespace Error {
     class message {
+        private: void static error(std::string value) {
+            std::string error_message = cout(value);
+            Php::out << error_message << std::flush;
+            Php::error << "" << std::flush;
+        }
+        
         public: void static empty_framework_mode() {
             std::string error_message = cout("'Fusion/Cores/Engine::Framework()' not declared");
             Php::out << error_message << std::flush;
@@ -50,6 +56,20 @@ namespace Error {
             std::string error_message = cout("'Fusion/Controllers/Route::Get()' second parameter too much context");
             Php::out << error_message << std::flush;
             Php::error << "" << std::flush;
+        }
+
+        public: void static uncapturable_uri_input() {
+            std::string error_message = cout("'Fusion/Http/Request->input()' the url doesnt support input method");
+            Php::out << error_message << std::flush;
+            Php::error << "" << std::flush;
+        }
+
+        public: void static v_double_uri() {
+            error("'v_double_uri' detected");
+        }
+
+        public: void static match_uri_identics() {
+            error("'match_uri_identics' detected");
         }
     };
 }
