@@ -6,6 +6,8 @@
 #include <fusion/regex/wrapper/pcre2.cpp> 
 #include <fusion/error/message.cpp>      
 
+#include <fusion/utils/string.h>
+
 #include <iostream>
 #include <vector>
 #include <regex>
@@ -13,42 +15,90 @@
 #include <string>
 
 class SmartRouter : public Php::Base {
-    public: Php::Value static uri_route_split(std::string uri_route, bool state = false) {
-        if(uri_route == "/") {
-            if(state) {
-                return 0;
-            } else {
-                return {"/"};
-            }
-        }
+    /**
+     * @brief for private method under SmartRouter class, used for utils/helper each worker method for each purpose
+     * 
+     */
 
-        uri_route.erase(uri_route.begin());
-        uri_route.pop_back();
-        
-        std::vector<std::string> temp;
-        std::string delimiter = "/";
-        size_t pos = 0;
-        std::string token;
-        
-        while ((pos = uri_route.find(delimiter)) != std::string::npos) {
-            token = uri_route.substr(0, pos);
-            temp.push_back(token);
-            uri_route.erase(0, pos + delimiter.length());
-        }; temp.push_back(uri_route);
-
-        if(state) {
-            int temp_count = temp.size();
-            return temp_count;
-        } else {
-            return temp;
+    private: void static replaceAll(std::string& str, const std::string& from, const std::string& to) {
+        if(from.empty())
+            return;
+        size_t start_pos = 0;
+        while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+            str.replace(start_pos, from.length(), to);
+            start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
         }
     }
+
+    /**
+     * @brief return split uri_route to array of uri with delim "/" and return size/length of splitted uri_route
+     */
+
+    public: Php::Value static uri_route_split(std::string uri_route, bool state = false) {
+        
+        /**
+         * use conditionals for only slash routing
+         * if uri_route only a "/" capture and use second conditional
+         * if state is given false return 0;
+         * if state is give true return a piece of array given only "/" as elements.
+         */
+        
+        if(uri_route == "/") {
+            if(state) 
+                return 0;
+            else
+                return {"/"};
+        }
+
+        /**
+         * remove first slash and last slash in routing uri
+         * e.g. /user/:id/../../ = user/:id/../..
+         */
+
+        uri_route.substr(1, uri_route.length() - 2);
+        
+        /**
+         * split uri_route as splitted by delim "/"
+         * e.g. /user/:id/.. = ["user", ":id"]
+         */
+
+        std::vector<std::string> uri_route_split = utils::str_split("/", uri_route);
+
+        /**
+         * return context from what second argumen
+         * when second argumen is:
+         * false : return uri_route as array of splitted by delim "/"
+         * true  : return uri_route length/size
+         */
+
+        if(state) 
+            return (int)uri_route_split.size();
+        else
+            return uri_route_split;
+    }
+
+    /**
+     * @brief push each uri based from length for uri_route routing, using splitted uri_route_split.
+     *        e.g. /home/:get/:id/edit  = [/home/:get/:id/edit]  => 4
+     *             /user/:id/:action/do = [/user/:id/:action/do] => 4
+     */
 
     public: void static catch_uri_parse(std::string uri_route) {
         Php::Value FS_Uri_RCC = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});
         FS_Uri_RCC[uri_route] = uri_route_split(uri_route, true);   
         Database::set::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"}, FS_Uri_RCC);   
     }
+
+    /**
+     * @brief grouping splitted route from $_SESSION[...FS_Uri_Route_Char_Count] to each length
+     *        e.g. /home/:get/:id/edit  = [/home/:get/:id/edit]  => 4
+     *             /user/:id/:action/do = [/user/:id/:action/do] => 4
+     *        ===> [4] => [
+     *                      "/home/:get/:id/edit" ,
+     *                      "/user/:id/:action/do",
+     *                    ]
+     * 
+     */
 
     public: void static parsing_uri() {
         Php::Value FS_Uri_Route_Char_Count = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});
@@ -63,32 +113,10 @@ class SmartRouter : public Php::Base {
         }
     }
 
-    public: void static uri_route_induplicates() {
-        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Induplicates"});
-
-        Php::Value FS_Uri_Route_Char_Count_Parsed = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed"});
-        for(auto &uri : FS_Uri_Route_Char_Count_Parsed) {
-            Php::Value uri_group = uri.second;
-            if(Php::count(uri_group) > 1) {
-                Database::set::push_array_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Induplicates"}, uri_group);
-            }
-        }
-    }
-
     public: void static v_double(std::string uri_route) {
         Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
         if(Php::call("in_array", uri_route, web_route_list).boolValue()) {
             Error::message::v_double_uri();
-        }
-    }
-
-    private: void static replaceAll(std::string& str, const std::string& from, const std::string& to) {
-        if(from.empty())
-            return;
-        size_t start_pos = 0;
-        while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-            str.replace(start_pos, from.length(), to);
-            start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
         }
     }
 
@@ -157,21 +185,22 @@ class SmartRouter : public Php::Base {
     }
 
     public: void static validate_uri_identics() {
-        Php::Value FS_Uri_RI = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Induplicates"});
+        Php::Value FS_Uri_RI = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed"});
 
         for(auto &uri : FS_Uri_RI) {
-            for(auto &uri_parsed : uri.second) {
-                for(auto &uri_parsed_pattern : uri.second) {
-                    if(uri_parsed.first != uri_parsed_pattern.first) 
-                        match_uri_identitcs(uri_parsed.second, uri_parsed_pattern.second);
+            if(Php::count(uri.second) > 1) 
+                for(auto &uri_parsed : uri.second) {
+                    for(auto &uri_parsed_pattern : uri.second) {
+                        if(uri_parsed.first != uri_parsed_pattern.first) 
+                            match_uri_identitcs(uri_parsed.second, uri_parsed_pattern.second);
+                    }
                 }
-            }
         }
     }
 
     public: void static smart_uri_validator() {
         parsing_uri();
-        uri_route_induplicates();
+        
         validate_uri_identics();
     }
 

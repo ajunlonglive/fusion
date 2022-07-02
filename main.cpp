@@ -20,7 +20,7 @@ extern "C" {
 
         Php::Class<Engine> engine("Cores\\Engine");
         Php::Class<Autoload> autoload("Cores\\Autoload");
-        Php::Class<Route> route("Controllers\\Route");
+        Php::Class<Route> route("Component\\Gate\\Route");
         Php::Class<Controller> controller("Controllers\\Controller");
         Php::Class<Request> request("Http\\Request");
         // Php::Class<InputCapture> inputcapture("Utils\\InputCapture");
