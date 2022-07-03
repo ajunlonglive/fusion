@@ -17,10 +17,9 @@
 class SmartRouter : public Php::Base {
     /**
      * @brief for private method under SmartRouter class, used for utils/helper each worker method for each purpose
-     * 
      */
 
-    private: void static replaceAll(std::string& str, const std::string& from, const std::string& to) {
+    public: void static replaceAll(std::string& str, const std::string& from, const std::string& to) {
         if(from.empty())
             return;
         size_t start_pos = 0;
@@ -30,6 +29,22 @@ class SmartRouter : public Php::Base {
         }
     }
 
+    /**
+     * @brief check if user create a same-identics-equals router for twice/double.
+     *        e.g. Route::Get("/user/...") == Route::Get("/user/...")
+     */
+
+    public: void static v_double(std::string uri_route) {
+        Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
+        if(Php::call("in_array", uri_route, web_route_list).boolValue()) {
+            Error::message::v_double_uri();
+        }
+    }
+
+    public: void static reset_v_double() {
+        Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, false);
+    }
+ 
     /**
      * @brief return split uri_route to array of uri with delim "/" and return size/length of splitted uri_route
      */
@@ -55,8 +70,11 @@ class SmartRouter : public Php::Base {
          * e.g. /user/:id/../../ = user/:id/../..
          */
 
-        uri_route.substr(1, uri_route.length() - 2);
+        uri_route = uri_route.substr(1, uri_route.length() - 2);
         
+
+        replaceAll(uri_route, "$fs_bs$", "\\");
+
         /**
          * split uri_route as splitted by delim "/"
          * e.g. /user/:id/.. = ["user", ":id"]
@@ -107,18 +125,25 @@ class SmartRouter : public Php::Base {
             Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed", parent.second});
             for(auto &child : FS_Uri_Route_Char_Count) {
                 if(parent.second == child.second)
-                    if(!Php::call("in_array", child.first, Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed", parent.second})))
-                        Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed", parent.second}, child.first);
+                    if(!Php::call("in_array", child.first, Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed", parent.second}))) {
+                        Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed", parent.second}, child.first );
+                    }
             }
         }
     }
 
-    public: void static v_double(std::string uri_route) {
-        Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
-        if(Php::call("in_array", uri_route, web_route_list).boolValue()) {
-            Error::message::v_double_uri();
-        }
-    }
+    /**
+     * @brief a function for running logical state for matching each-per-each routing under own sized-elem.
+     *        * the algorithm/logic flow is:
+     *        e.g. a routing with size 4-length:
+     *        -- /user/:id/:username/edit 
+     *        -- /user/:id/:username/post
+     *        ---------------------------
+     *        1.  user :id :username edit
+     *        2.  user :id :username post
+     *        for a group, the each routing was had three (3) identics route, which is still approved to used for routing uri.
+     *        if second routing with last uri changed from post to edit, it will trigger as four (4) identics route, and will return error
+     */
 
     public: void static match_uri_identitcs(std::string uri_x, std::string uri_y) {
         Php::Value uri_x_parsed = uri_route_split(uri_x, false);
@@ -131,8 +156,8 @@ class SmartRouter : public Php::Base {
             std::string ftr_uri_x = f_uri_x.second;
             std::string ftr_uri_y = uri_y_parsed[f_uri_x.first];
 
-            replaceAll(ftr_uri_x, "$fs_bs$", "\\");
-            replaceAll(ftr_uri_y, "$fs_bs$", "\\");
+            // replaceAll(ftr_uri_x, "$fs_bs$", "\\");
+            // replaceAll(ftr_uri_y, "$fs_bs$", "\\");
 
             const char *str_uri_x = ftr_uri_x.c_str();
             const char *str_uri_y = ftr_uri_y.c_str();
@@ -140,7 +165,7 @@ class SmartRouter : public Php::Base {
             for(auto &exp : std::vector<const char *> {
                 "^(?!:)[\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\@]*$",
                 "^\\:[\\w+_-]*$",
-                "^\\:\\w+\\:\\:\\(.*?\\)$"}) {
+                "^\\:[\\w+_-]*\\:\\:\\(.*?\\)$"}) {
                 regexp::match(exp, str_uri_x, [&](const char * matched) {
                     regexp::match("^(?!:)[\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\@]*$", str_uri_y, [&](const char * x) {
                         if((std::string)str_uri_x == (std::string)str_uri_y) { 
@@ -151,7 +176,7 @@ class SmartRouter : public Php::Base {
                             route_identic_passed++;
                         }
                         
-                            if((std::string)exp == std::string("^\\:\\w+\\:\\:\\(.*?\\)$"))
+                            if((std::string)exp == std::string("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$"))
                             route_identic_passed++;
                     });
 
@@ -162,31 +187,42 @@ class SmartRouter : public Php::Base {
                         if((std::string)exp == std::string("^\\:[\\w+_-]*$"))
                             route_identic_passed++;
 
-                        if((std::string)exp == std::string("^\\/\\:\\w+\\:\\:\\(.*?\\)$"))
+                        if((std::string)exp == std::string("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$"))
                             route_identic_passed++;
                     });
 
-                    regexp::match("^\\:\\w+\\:\\:\\(.*?\\)$", str_uri_y, [&](const char *oe) {
+                    regexp::match("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$", str_uri_y, [&](const char *oe) {
                         if((std::string)exp == std::string("^(?!:)[\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\@]*$"))
                             route_identic_passed++;
 
-                        if((std::string)exp == std::string("^\\:[\\w+_-]*$"))
+                        if((std::string)exp == std::string("^\\:[\\w+_-]*$")) {
                             route_identic_passed++;
+                        }
                         
-                        if((std::string)exp == std::string("^\\/\\:\\w+\\:\\:\\(.*?\\)$"))
+                        if((std::string)exp == std::string("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$")) {
                             route_identic_passed++;
+                        }
                     });
                 });
             }
         }
         
+        // if the length of original size routing grouping same as identics each routing
+        // return Error::message()
+
+        // Php::out << uri_x << " = " << route_identic_passed << " = " << route_length << " = " << uri_y << "<br />" << std::flush;
         if(route_identic_passed >= route_length)
             Error::message::match_uri_identics();
     }
 
+    /**
+     * @brief a iterator for each under each routing grouping
+     *        -- opt: skip a one (1) size of routing grouping, allow only for greater 2 routing grouping
+     */
+
     public: void static validate_uri_identics() {
         Php::Value FS_Uri_RI = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed"});
-
+        
         for(auto &uri : FS_Uri_RI) {
             if(Php::count(uri.second) > 1) 
                 for(auto &uri_parsed : uri.second) {
@@ -198,9 +234,58 @@ class SmartRouter : public Php::Base {
         }
     }
 
-    public: void static smart_uri_validator() {
-        parsing_uri();
+    public: bool static handle_input_uri_guard(std::string uri_route) {
+        std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
+
+        std::vector<std::string> split_request_uri = uri_route_split(request_uri, false);
+
+        std::vector<std::string> split_uri_route = uri_route_split(uri_route, false);
         
+        int orig_length_uri = split_request_uri.size();
+        int patt_length_uri = split_uri_route.size();
+        int match_length_uri = 0;
+        int iterate = 0;
+
+        if(orig_length_uri != patt_length_uri)
+            return false;
+
+        for(auto &uri_r : split_uri_route) {
+            regexp::match("^(?!:)[\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\@]*$", uri_r.c_str(), [&](const char * matched) {
+                if(uri_r == split_request_uri[iterate]) {
+                    match_length_uri++;
+                }
+            });
+
+            regexp::match("^\\:[\\w+_-]*$", uri_r.c_str(), [&](const char * matched) {
+                    match_length_uri++;
+            });
+
+            regexp::match("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$", uri_r.c_str(), [&](const char * matched) {
+                regexp::match("(?<=\\:\\:\\().*?(?=\\))", matched, [&](const char * matched2) {
+                    // Php::out << split_request_uri[iterate].c_str() << " : <-- <br />" << std::flush;
+                    regexp::match(matched2, split_request_uri[iterate].c_str(), [&](const char * matched3) {
+                        match_length_uri++;
+                    });
+                });
+            });
+
+            iterate++;
+        }
+
+        // Php::out << uri_route << " = " << orig_length_uri << " = " << match_length_uri << "<br />" << std::flush;
+
+        if(orig_length_uri == match_length_uri)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * @brief a god/main function, used for running flow a SmartRoute idiomatic.
+     */
+
+    public: void static run() {
+        parsing_uri();        
         validate_uri_identics();
     }
 

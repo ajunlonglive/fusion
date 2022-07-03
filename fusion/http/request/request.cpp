@@ -6,12 +6,19 @@
 
 class Request : public Php::Base {
     public: std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
-    public: Php::Value input_capture;
+    public: std::string uri_route;
     
-    public: void input(Php::Parameters &value) {
-        Php::Value uri = value[0];
+    public: Php::Value input(Php::Parameters &value) {
+        if(Php::count(value) < 1) {
+            Php::error << "Empty Argumen input<br />" << std::flush;
+        }
 
-        InputCapture::is_capturable((std::string)uri, request_uri);
-        InputCapture::parse_input_capturable((std::string)uri);
+        SmartRouter::replaceAll(uri_route, "$fs_bs$", "\\");
+
+        std::string uri_subject = (Php::Value) value[0];
+
+        InputCapture::is_capturable(uri_subject, uri_route);
+        // Php::Value InputCapture::parse_input_capturable(uri_subject, uri_route);
+        return (InputCapture::parse_input_capturable(uri_subject, uri_route))[uri_subject];
     }   
 };

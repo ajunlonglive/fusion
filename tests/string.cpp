@@ -3,21 +3,12 @@
 #include <vector>
 
 int main() {
-    std::string foo = "hello/:get";
+    std::string uri_route = "/test/";
 
-    std::vector<std::string> tmp = {""};
+    uri_route = uri_route.substr(1, uri_route.length() - 2);
 
-    for(auto &e : foo) {
-        if(std::string(1, e) != "/") {
-            tmp[tmp.size() - 1] += e;
-        } else {
-            tmp.push_back("");
-        }
-    }
 
-    // for(auto &x : tmp)
-        // for(auto &y : tmp)
-            std::cout << tmp.size() << std::endl;
+    std::cout << uri_route << std::endl;
 
     return 0;
 }
