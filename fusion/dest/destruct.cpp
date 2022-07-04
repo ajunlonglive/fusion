@@ -3,8 +3,8 @@
 #include <phpcpp.h>
 #include <fusion/database/core.cpp>
 #include <fusion/cores/autoload/loader.h>
-#include <fusion/controllers/route/service.cpp>
-#include <fusion/controllers/route/smart.h>
+#include <fusion/components/gate/route/provider/service.h>
+#include <fusion/components/gate/route/provider/smart.h>
 #include <fusion/dest/destruct.cpp>
 
 class Destruct : public Php::Base {
@@ -14,9 +14,12 @@ class Destruct : public Php::Base {
      *        if same route uri was found, Fusion will thrown error and stop the code execute for else it will continue
      */
     public: void static route_init() {
-        // running first loader::route, grab all php files which include router config
+        // running first loader::route, grab all php files which include router config and aneccesary
         loader::route();
         
+        // run all service in SmartRouter
+        SmartRouter::run();
+
         // if router can't find any double/twice router grouping, reset data parameter
         SmartRouter::reset_v_double();
 
@@ -35,9 +38,6 @@ class Destruct : public Php::Base {
 
         // run again for trigger a routing grouping
         loader::route(); 
-
-        // run all service in SmartRouter
-        SmartRouter::run();
     }
 
     public: void static session_reset() {

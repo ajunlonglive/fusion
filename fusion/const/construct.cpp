@@ -3,8 +3,8 @@
 #include <phpcpp.h>
 #include <fusion/database/core.cpp>
 #include <fusion/error/message.cpp>
-#include <fusion/regex/route.cpp>
-#include <fusion/controllers/route/smart.h>
+#include <fusion/regex/route.h>
+#include <fusion/components/gate/route/provider/smart.h>
 
 #include <iostream>
 

@@ -3,19 +3,12 @@
 #include <phpcpp.h>
 
 #include <fusion/const/construct.cpp>
-#include <fusion/controllers/route/service.cpp>
-#include <fusion/regex/route.cpp>
-
+#include <fusion/components/gate/route/provider/service.h>
+#include <fusion/regex/route.h>
 #include <iostream>
 
-class Route : public Php::Base {
-    public: Route() {
-        Construct::framework();
-    }
-
-    public: void static Get(Php::Parameters &param) {
-        Route __construct;
-
+class RouteGet : public Php::Base {
+    public: RouteGet(Php::Parameters &param) {
         if(Php::count(param) < 2) 
             Error::message::empty_route_get_param();
 
@@ -34,4 +27,10 @@ class Route : public Php::Base {
         }
 
     }
+
+    public: void test() {
+        Php::out << "<br />hello test" << "<br />" << std::flush;
+    }
+
+    public: ~RouteGet() {}
 };

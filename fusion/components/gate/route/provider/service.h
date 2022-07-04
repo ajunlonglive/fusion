@@ -5,9 +5,9 @@
 #include <fusion/database/core.cpp>
 #include <fusion/error/message.cpp>
 #include <fusion/http/request/request.cpp>
-#include <fusion/regex/route.cpp>
+#include <fusion/regex/route.h>
 #include <fusion/http/request/input-capture.h>
-#include <fusion/controllers/route/smart.h>
+#include <fusion/components/gate/route/provider/smart.h>
 
 #include <iostream>
 
@@ -58,7 +58,11 @@ namespace RouteService {
 
                 Php::Object user_controller(user_controller_name);
 
-                user_controller.call(user_method_name);
+                Request *request = new Request;
+                request->uri_route = uri_route;        
+
+
+                user_controller.call(user_method_name, Php::Object("Fusion\\Http\\Request", request));
 
                 return 0;
             }               
@@ -68,7 +72,7 @@ namespace RouteService {
             if(Php::call("is_callable", handler_opt).boolValue()) {
                 Request *request = new Request;
                 request->uri_route = uri_route;        
-                
+
                 handler_opt(Php::Object("Fusion\\Http\\Request", request));
                 return 0;
             }

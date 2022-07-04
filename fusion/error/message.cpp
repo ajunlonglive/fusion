@@ -64,6 +64,14 @@ namespace Error {
             Php::error << "" << std::flush;
         }
 
+
+        public: int static captureable_not_found() {
+            std::string error_message = cout("'Fusion/Http/Request->input()' cant found the uri input");
+            Php::out << error_message << std::flush;
+            Php::error << "" << std::flush;
+            return 0;
+        }
+
         public: void static v_double_uri() {
             error("'v_double_uri' detected");
         }

@@ -14,6 +14,8 @@
 
 #include <fusion/cores/engine/engine.cpp>
 #include <fusion/cores/autoload/autoload.cpp>   
-#include <fusion/controllers/route/route.cpp>
+#include <fusion/components/gate/route/route.h>
 #include <fusion/controllers/controller/controller.cpp>
 #include <fusion/http/request/input-capture.h>
+#include <fusion/components/gate/route/unit.cpp>
+#include <fusion/components/gate/route/method/get.h>
