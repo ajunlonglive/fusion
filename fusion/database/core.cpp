@@ -167,6 +167,10 @@ namespace Database {
         Php::eval("unset($_SESSION" +merge_array_index+ ");");
     };
 
+    std::string session_id() {
+        return Php::call("session_id");
+    }
+
     void reset() {
         Php::call("session_destroy");
     }

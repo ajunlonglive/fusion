@@ -39,9 +39,9 @@ class loader : public Php::Base {
         // MVC client directory
         Php::Value app_config;
         
-        app_config["FS_MVC_Client_Dir"]["Controllers"] = "../app/controllers/";
-        app_config["FS_MVC_Client_Dir"]["Models"]      = "../app/models/";
-        app_config["FS_MVC_Client_Dir"]["Views"]       = "../app/views/";
+        app_config["FS_MVC_Client_Dir"]["Controllers"] = "../app/Controllers/";
+        app_config["FS_MVC_Client_Dir"]["Models"]      = "../app/Models/";
+        // app_config["FS_MVC_Client_Dir"]["Views"]       = "../app/Views/";
 
         // Routes client directory
 
