@@ -52,7 +52,11 @@ extern "C" {
         route.method<&Route::Get>("Get", {});
 
         controller.method<&Controller::Class>("Class", {});
-        request.method<&Request::input>("input", {});
+        
+        request.method<&Request::__construct>("__construct", {});
+        request.method<&Request::uri>("uri", {});
+        request.method<&Request::get>("get", {});
+        // request.property("get", "", Php::Public);
 
         // adding class to namespace
         // Php::Namespace constra("Views");

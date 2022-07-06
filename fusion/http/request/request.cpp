@@ -9,7 +9,20 @@ class Request : public Php::Base {
     public: std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
     public: std::string uri_route;
     
-    public: Php::Value input(Php::Parameters &index_uri) {  
+    public: Request() = default;
+
+    public: void __construct() {
+        Php::Value self(this);
+        // self["get"] = "";
+        // method();
+    }
+    
+    public: Php::Value get() {
+        Php::Value get_group = Php::eval("return $_GET;").mapValue();
+        return get_group;
+    }
+
+    public: Php::Value uri(Php::Parameters &index_uri) {  
         SmartRouter::replaceAll(uri_route, "$fs_bs$", "\\");
 
         std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 

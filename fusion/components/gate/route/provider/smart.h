@@ -30,10 +30,10 @@ class SmartRouter : public Php::Base {
     }
 
     /**
-     * @brief check if user create a same-identics-equals router for twice/double.
-     *        e.g. Route::Get("/user/...") == Route::Get("/user/...")
+     * Check if user create a same-identics-equals router for twice/double and more.
+     * @param uri_route main uri_route
+     * 
      */
-
     public: void static v_double(std::string uri_route) {
         Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
         if(Php::call("in_array", uri_route, web_route_list).boolValue()) {
@@ -46,9 +46,11 @@ class SmartRouter : public Php::Base {
     }
  
     /**
-     * @brief return split uri_route to array of uri with delim "/" and return size/length of splitted uri_route
+     * return split uri_route to array of uri with delim "/" and return size/length of splitted uri_route
+     * @param uri_route given for split
+     * @param state if false will return size-lenght of splitted route or else, return the splitted route
+     * 
      */
-
     public: Php::Value static uri_route_split(std::string uri_route, bool state = false) {
         
         /**
@@ -272,7 +274,7 @@ class SmartRouter : public Php::Base {
             iterate++;
         }
 
-        // Php::out << uri_route << " = " << orig_length_uri << " = " << match_length_uri << "<br />" << std::flush;
+        Php::out << uri_route << " = " << orig_length_uri << " = " << match_length_uri << "<br />" << std::flush;
 
         if(orig_length_uri == match_length_uri)
             return true;

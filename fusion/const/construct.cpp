@@ -31,7 +31,7 @@ namespace Construct {
     }
     
     void route_init() {
-        std::string request_uri = Php::eval("return $_SERVER['REQUEST_URI'].'/';").stringValue();       
+        std::string request_uri = Php::eval("return $_SERVER['REQUEST_URI'];").stringValue();       
 
         std::string escape_request_uri = Regex::uri::escape_request_uri(request_uri);
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}, escape_request_uri); 
@@ -40,7 +40,7 @@ namespace Construct {
 
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});    
 
-        Php::Value request_uri_split = SmartRouter::uri_route_split(request_uri, false);
+        Php::Value request_uri_split = SmartRouter::uri_route_split(escape_request_uri, false);
         Database::set::push_array_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Req_Uri_Split"}, request_uri_split);
     }
 }

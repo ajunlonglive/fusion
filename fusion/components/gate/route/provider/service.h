@@ -13,7 +13,7 @@
 
 namespace RouteService {
     class web : public Php::Base {
-
+        
         /**
          * @brief used for push a each routing uri to $_SESSION[FS_Web_Route_List]
          *        - completely with SmartRouter::v_double which is will handle for double/twice routing
@@ -38,8 +38,10 @@ namespace RouteService {
 
             
             if(!SmartRouter::handle_input_uri_guard(uri_route)) {
-                if(uri_route != request_uri)
+                if(uri_route != request_uri) {
+                    Php::out << "IM HERE" << "<br />" << std::flush;
                     return 0;         
+                }
             }
                 
             // the gate for check if current $_SERVER["REQUEST_URI"] request same as routing address
@@ -56,13 +58,18 @@ namespace RouteService {
                 std::string user_controller_name = handler_opt[0];
                 const char* user_method_name     = handler_opt[1];
 
-                Php::Object user_controller(user_controller_name);
-
-                Request *request = new Request;
+                Request *request = new Request();
                 request->uri_route = uri_route;        
 
+                Php::Object user_controller;
 
-                user_controller.call(user_method_name, Php::Object("Fusion\\Http\\Request", request));
+                if(Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
+                    user_controller = Php::Object(user_controller_name.c_str(),  Php::Object("Fusion\\Http\\Request", request));
+                    user_controller.call(user_method_name);
+                } else {
+                    user_controller = Php::Object(user_controller_name.c_str());
+                    user_controller.call(user_method_name, Php::Object("Fusion\\Http\\Request", request));
+                }
 
                 return 0;
             }               
