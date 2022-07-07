@@ -72,6 +72,20 @@ namespace Error {
             return 0;
         }
 
+        public: int static method_route_not_post() {
+            std::string error_message = cout("method route not post");
+            Php::out << error_message << std::flush;
+            Php::error << "" << std::flush;
+            return 0;
+        }
+
+        public: int static method_route_not_get() {
+            std::string error_message = cout("method route not get");
+            Php::out << error_message << std::flush;
+            Php::error << "" << std::flush;
+            return 0;
+        }
+        
         public: void static v_double_uri() {
             error("'v_double_uri' detected");
         }

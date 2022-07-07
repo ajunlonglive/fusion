@@ -19,4 +19,6 @@
 #include <fusion/http/request/input-capture.h>
 #include <fusion/components/gate/route/unit.cpp>
 #include <fusion/components/gate/route/method/get.h>
+#include <fusion/components/gate/route/method/post.h>
 #include <fusion/views/constra/constra.h>
+#include <fusion/cores/container/container.h>

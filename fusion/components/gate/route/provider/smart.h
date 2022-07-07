@@ -11,7 +11,6 @@
 #include <iostream>
 #include <vector>
 #include <regex>
-#include <pcrecpp.h>
 #include <string>
 
 class SmartRouter : public Php::Base {
@@ -99,8 +98,12 @@ class SmartRouter : public Php::Base {
 
     /**
      * @brief push each uri based from length for uri_route routing, using splitted uri_route_split.
-     *        e.g. /home/:get/:id/edit  = [/home/:get/:id/edit]  => 4
+     * @note e.g. /home/:get/:id/edit  = [/home/:get/:id/edit]  => 4
      *             /user/:id/:action/do = [/user/:id/:action/do] => 4
+     * 
+     * @param uri_route (string) User route address
+     * 
+     * @return void()
      */
 
     public: void static catch_uri_parse(std::string uri_route) {
@@ -111,15 +114,16 @@ class SmartRouter : public Php::Base {
 
     /**
      * @brief grouping splitted route from $_SESSION[...FS_Uri_Route_Char_Count] to each length
-     *        e.g. /home/:get/:id/edit  = [/home/:get/:id/edit]  => 4
+     * @note e.g. /home/:get/:id/edit  = [/home/:get/:id/edit]  => 4
      *             /user/:id/:action/do = [/user/:id/:action/do] => 4
      *        ===> [4] => [
      *                      "/home/:get/:id/edit" ,
      *                      "/user/:id/:action/do",
      *                    ]
      * 
+     * @return void()
+     * 
      */
-
     public: void static parsing_uri() {
         Php::Value FS_Uri_Route_Char_Count = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});
         
@@ -135,18 +139,23 @@ class SmartRouter : public Php::Base {
     }
 
     /**
-     * @brief a function for running logical state for matching each-per-each routing under own sized-elem.
-     *        * the algorithm/logic flow is:
-     *        e.g. a routing with size 4-length:
-     *        -- /user/:id/:username/edit 
-     *        -- /user/:id/:username/post
-     *        ---------------------------
-     *        1.  user :id :username edit
-     *        2.  user :id :username post
-     *        for a group, the each routing was had three (3) identics route, which is still approved to used for routing uri.
-     *        if second routing with last uri changed from post to edit, it will trigger as four (4) identics route, and will return error
+     * @brief   a function for running logical state for matching each-per-each routing under own sized-elem.
+     * @note    the algorithm/logic flow is:
+     *          e.g. a routing with size 4-length:
+     *          -- /user/:id/:username/edit 
+     *          -- /user/:id/:username/post
+     *          ---------------------------
+     *          1.  user :id :username edit
+     *          2.  user :id :username post
+     *          for a group, the each routing was had three (3) identics route, which is still approved to used for routing uri.
+     *          if second routing with last uri changed from post to edit, it will trigger as four (4) identics route, and will return error
+     * 
+     * @param uri_x ...
+     * @param uri_y ...
+     * 
+     * @return void()
+     * 
      */
-
     public: void static match_uri_identitcs(std::string uri_x, std::string uri_y) {
         Php::Value uri_x_parsed = uri_route_split(uri_x, false);
         Php::Value uri_y_parsed = uri_route_split(uri_y, false);
@@ -212,16 +221,17 @@ class SmartRouter : public Php::Base {
         // if the length of original size routing grouping same as identics each routing
         // return Error::message()
 
-        // Php::out << uri_x << " = " << route_identic_passed << " = " << route_length << " = " << uri_y << "<br />" << std::flush;
         if(route_identic_passed >= route_length)
             Error::message::match_uri_identics();
     }
 
     /**
      * @brief a iterator for each under each routing grouping
-     *        -- opt: skip a one (1) size of routing grouping, allow only for greater 2 routing grouping
+     * @note -- opt: skip a one (1) size of routing grouping, allow only for greater 2 routing grouping
+     * 
+     * @return void()
+     * 
      */
-
     public: void static validate_uri_identics() {
         Php::Value FS_Uri_RI = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count_Parsed"});
         
@@ -264,7 +274,6 @@ class SmartRouter : public Php::Base {
 
             regexp::match("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$", uri_r.c_str(), [&](const char * matched) {
                 regexp::match("(?<=\\:\\:\\().*?(?=\\))", matched, [&](const char * matched2) {
-                    // Php::out << split_request_uri[iterate].c_str() << " : <-- <br />" << std::flush;
                     regexp::match(matched2, split_request_uri[iterate].c_str(), [&](const char * matched3) {
                         match_length_uri++;
                     });
@@ -273,8 +282,6 @@ class SmartRouter : public Php::Base {
 
             iterate++;
         }
-
-        Php::out << uri_route << " = " << orig_length_uri << " = " << match_length_uri << "<br />" << std::flush;
 
         if(orig_length_uri == match_length_uri)
             return true;
@@ -285,7 +292,6 @@ class SmartRouter : public Php::Base {
     /**
      * @brief a god/main function, used for running flow a SmartRoute idiomatic.
      */
-
     public: void static run() {
         parsing_uri();        
         validate_uri_identics();

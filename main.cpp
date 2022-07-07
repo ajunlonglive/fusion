@@ -22,8 +22,11 @@ extern "C" {
         Php::Class<Autoload>    autoload("Cores\\Autoload");
         Php::Class<Route>       route("Components\\Gate\\Route");
         Php::Class<Controller>  controller("Controllers\\Controller");
+        
         Php::Class<Request>     request("Http\\Request");
         Php::Class<RouteGet>    routeget("Components\\Gate\\Route\\Method\\Get");
+        Php::Class<RoutePost>   routepost("Components\\Gate\\Route\\Method\\Post");
+
         Php::Class<Constra>     constra("Views\\Constra");
         
         constra.method<&Constra::__construct>("__construct", {});
@@ -50,6 +53,7 @@ extern "C" {
         autoload.method<&Autoload::Register>("Register", {});
 
         route.method<&Route::Get>("Get", {});
+        route.method<&Route::Post>("Post", {});
 
         controller.method<&Controller::Class>("Class", {});
         
@@ -66,6 +70,7 @@ extern "C" {
         fusion.add(std::move(autoload));
         fusion.add(std::move(route));
         fusion.add(std::move(routeget));
+        fusion.add(std::move(routepost));
         fusion.add(std::move(controller));
         fusion.add(std::move(request));
         fusion.add(std::move(unit));

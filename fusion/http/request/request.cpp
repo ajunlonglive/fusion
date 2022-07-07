@@ -7,7 +7,7 @@
 
 class Request : public Php::Base {
     public: std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
-    public: std::string uri_route;
+    public: std::string uri_route = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
     
     public: Request() = default;
 
