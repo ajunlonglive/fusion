@@ -35,7 +35,13 @@ namespace Construct {
 
         std::string escape_request_uri = Regex::uri::escape_request_uri(request_uri);
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}, escape_request_uri); 
-        
+
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"}, Php::eval("return $_SERVER['REQUEST_METHOD'];").stringValue());
+
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "true");
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "POST_METHOD", "is_null"}, "true");
+
+
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
 
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});    

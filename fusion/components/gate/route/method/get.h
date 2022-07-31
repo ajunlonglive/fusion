@@ -5,6 +5,7 @@
 #include <fusion/const/construct.cpp>
 #include <fusion/components/gate/route/provider/service.h>
 #include <fusion/components/gate/route/provider/smart.h>
+#include <fusion/database/core.cpp>
 #include <fusion/regex/route.h>
 #include <iostream>
 
@@ -18,7 +19,9 @@ class RouteGet : public Php::Base {
         if(Php::count(param) > 2)
             Error::message::many_route_get_param();
 
-        if(Php::eval("return $_SERVER['REQUEST_METHOD'];").stringValue() == "GET") {
+        std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
+
+        if(request_method == "GET") {
             std::string uri_route   = param[0];
             std::string escape_uri_route = Regex::uri::escape_request_uri(uri_route + "/");
             Php::Value handler_opt  = param[1];
@@ -31,6 +34,8 @@ class RouteGet : public Php::Base {
 
                 // The gate for check if current $_SERVER["REQUEST_URI"] request same as user route address
                 if(SmartRouter::handle_input_uri_guard(escape_uri_route) || uri_route == request_uri) {
+
+                    Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "false");
 
                     // Php::Value gett = param;
                     // std::string cclass = gett[1][0];

@@ -37,7 +37,8 @@ class Destruct : public Php::Base {
         RouteService::web::reset_route_list(); // reset web route list
 
         // run again for trigger a routing grouping
-        loader::route(); 
+        loader::route();
+        RouteService::web::flush();
     }
 
     public: void static session_reset() {
