@@ -1,11 +1,11 @@
 #pragma once
 
 #include <phpcpp.h>
-#include <fusion/database/core.cpp>
-#include <fusion/cores/autoload/loader.h>
-#include <fusion/components/gate/route/provider/service.h>
-#include <fusion/components/gate/route/provider/smart.h>
-#include <fusion/dest/destruct.cpp>
+#include <fusion/database/core.hpp>
+#include <fusion/cores/autoload/loader.hpp>
+#include <fusion/components/gate/route/provider/service.hpp>
+#include <fusion/components/gate/route/provider/smart.hpp>
+#include <fusion/dest/destruct.hpp>
 
 class Destruct : public Php::Base {
     /**

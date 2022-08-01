@@ -1,11 +1,11 @@
 #pragma once
 
 #include <phpcpp.h>
-#include <fusion/database/core.cpp>
-#include <fusion/cores/autoload/autoload.cpp>
+#include <fusion/database/core.hpp>
+#include <fusion/cores/autoload/autoload.hpp>
 #include <fusion/error/message.hpp>
-#include <fusion/const/construct.cpp>
-#include <fusion/dest/destruct.cpp>
+#include <fusion/const/construct.hpp>
+#include <fusion/dest/destruct.hpp>
 
 #include <iostream>
 #include <sstream>

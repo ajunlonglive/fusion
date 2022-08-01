@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/http/request/request.cpp>
+#include <fusion/http/request/request.hpp>
 
 #include <iostream>
 

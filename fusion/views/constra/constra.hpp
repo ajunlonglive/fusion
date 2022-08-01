@@ -2,15 +2,14 @@
 
 #include <phpcpp.h>
 
-#include <fusion/views/constra/context.h>
-#include <fusion/regex/wrapper/pcre2.cpp>
+#include <fusion/views/constra/context.hpp>
+#include <fusion/regex/wrapper/pcre2.hpp>
+#include <fusion/database/core.hpp>
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <filesystem>
-
-#include <fusion/database/core.cpp>
 
 class Constra : public Php::Base {
     public: std::string render_resource;

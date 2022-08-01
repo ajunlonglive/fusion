@@ -1,8 +1,8 @@
 #pragma once
 
 #include <phpcpp.h>
-#include <fusion/database/core.cpp>
-#include <fusion/http/request/input-capture.h>
+#include <fusion/database/core.hpp>
+#include <fusion/http/request/input-capture.hpp>
 #include <fusion/error/message.hpp>
 
 class Request : public Php::Base {

@@ -2,10 +2,10 @@
 
 #include <phpcpp.h>
 
-#include <fusion/database/core.cpp>
-#include <fusion/regex/wrapper/pcre2.cpp> 
+#include <fusion/database/core.hpp>
+#include <fusion/regex/wrapper/pcre2.hpp> 
 #include <fusion/error/message.hpp>      
-#include <fusion/utils/string.h>
+#include <fusion/utils/string.hpp>
 
 #include <functional>
 #include <iostream>

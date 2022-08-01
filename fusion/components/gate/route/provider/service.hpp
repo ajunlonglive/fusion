@@ -2,15 +2,15 @@
 
 #include <phpcpp.h>
 
-#include <fusion/cores/container/container.h>
-#include <fusion/database/core.cpp>
+#include <fusion/cores/container/container.hpp>
+#include <fusion/database/core.hpp>
 #include <fusion/error/message.hpp>
-#include <fusion/http/request/request.cpp>
-#include <fusion/regex/route.h>
-#include <fusion/http/request/input-capture.h>
-#include <fusion/components/gate/route/provider/smart.h>
-#include <fusion/cores/container/container.h>
-#include <fusion/views/error/page.h>
+#include <fusion/http/request/request.hpp>
+#include <fusion/regex/route.hpp>
+#include <fusion/http/request/input-capture.hpp>
+#include <fusion/components/gate/route/provider/smart.hpp>
+#include <fusion/cores/container/container.hpp>
+#include <fusion/views/error/page.hpp>
 
 
 #include <iostream>

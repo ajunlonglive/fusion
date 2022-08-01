@@ -2,10 +2,10 @@
 
 #include <phpcpp.h>
 
-#include <fusion/const/construct.cpp>
-#include <fusion/components/gate/route/provider/service.h>
-#include <fusion/cores/container/container.h>
-#include <fusion/regex/route.h>
+#include <fusion/const/construct.hpp>
+#include <fusion/components/gate/route/provider/service.hpp>
+#include <fusion/cores/container/container.hpp>
+#include <fusion/regex/route.hpp>
 #include <iostream>
 
 

@@ -3,8 +3,8 @@
 #include <phpcpp.h>
 
 #include <fusion/error/message.hpp>
-#include <fusion/cores/autoload/loader.h>
-#include <fusion/const/construct.cpp>
+#include <fusion/cores/autoload/loader.hpp>
+#include <fusion/const/construct.hpp>
 
 class Autoload : public Php::Base {
     public: Php::Value static Config(Php::Parameters &param) {

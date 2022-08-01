@@ -1,10 +1,10 @@
 #pragma once
 
 #include <phpcpp.h>
-#include <fusion/database/core.cpp>
+#include <fusion/database/core.hpp>
 #include <fusion/error/message.hpp>
-#include <fusion/regex/route.h>
-#include <fusion/components/gate/route/provider/smart.h>
+#include <fusion/regex/route.hpp>
+#include <fusion/components/gate/route/provider/smart.hpp>
 
 #include <iostream>
 

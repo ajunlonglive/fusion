@@ -2,11 +2,11 @@
 
 #include <phpcpp.h>
 
-#include <fusion/const/construct.cpp>
-#include <fusion/components/gate/route/provider/service.h>
-#include <fusion/components/gate/route/provider/smart.h>
-#include <fusion/database/core.cpp>
-#include <fusion/regex/route.h>
+#include <fusion/const/construct.hpp>
+#include <fusion/components/gate/route/provider/service.hpp>
+#include <fusion/components/gate/route/provider/smart.hpp>
+#include <fusion/database/core.hpp>
+#include <fusion/regex/route.hpp>
 #include <iostream>
 
 class RouteGet : public Php::Base {

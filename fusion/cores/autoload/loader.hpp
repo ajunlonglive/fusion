@@ -1,7 +1,7 @@
 #pragma once
 #include <phpcpp.h>
 
-#include <fusion/database/core.cpp>
+#include <fusion/database/core.hpp>
 
 #include <string>
 #include <functional>

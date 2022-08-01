@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/regex/wrapper/pcre2.cpp>
+#include <fusion/regex/wrapper/pcre2.hpp>
 
 #include <regex>
 

@@ -2,8 +2,8 @@
 
 #include <phpcpp.h>
 
-#include <fusion/http/request/request.cpp>
-#include <fusion/cores/container/default.h>
+#include <fusion/http/request/request.hpp>
+#include <fusion/cores/container/default.hpp>
 
 #include <iostream>
 #include <vector>
