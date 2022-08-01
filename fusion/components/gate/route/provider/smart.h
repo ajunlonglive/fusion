@@ -4,10 +4,10 @@
 
 #include <fusion/database/core.cpp>
 #include <fusion/regex/wrapper/pcre2.cpp> 
-#include <fusion/error/message.cpp>      
-
+#include <fusion/error/message.hpp>      
 #include <fusion/utils/string.h>
 
+#include <functional>
 #include <iostream>
 #include <vector>
 #include <regex>
@@ -17,6 +17,13 @@ class SmartRouter : public Php::Base {
     /**
      * @brief for private method under SmartRouter class, used for utils/helper each worker method for each purpose
      */
+
+    public: void static boot(std::function<void()> callback) {
+        Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
+        if(Php::count(web_route_list) > 0) {
+            callback();
+        }
+    }
 
     public: void static replaceAll(std::string& str, const std::string& from, const std::string& to) {
         if(from.empty())
@@ -58,7 +65,7 @@ class SmartRouter : public Php::Base {
          * if state is given false return 0;
          * if state is give true return a piece of array given only "/" as elements.
          */
-        
+
         if(uri_route == "/") {
             if(state) 
                 return 0;
@@ -293,8 +300,10 @@ class SmartRouter : public Php::Base {
      * @brief a god/main function, used for running flow a SmartRoute idiomatic.
      */
     public: void static run() {
-        parsing_uri();        
-        validate_uri_identics();
+        boot([&](){
+            parsing_uri();        
+            validate_uri_identics();
+        });
     }
 
 };

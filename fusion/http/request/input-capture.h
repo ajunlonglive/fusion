@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/error/message.cpp>
+#include <fusion/error/message.hpp>
 #include <fusion/regex/wrapper/pcre2.cpp>
 #include <fusion/components/gate/route/provider/smart.h>
 

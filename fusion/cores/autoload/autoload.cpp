@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/error/message.cpp>
+#include <fusion/error/message.hpp>
 #include <fusion/cores/autoload/loader.h>
 #include <fusion/const/construct.cpp>
 

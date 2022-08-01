@@ -4,7 +4,7 @@
 
 #include <fusion/cores/container/container.h>
 #include <fusion/database/core.cpp>
-#include <fusion/error/message.cpp>
+#include <fusion/error/message.hpp>
 #include <fusion/http/request/request.cpp>
 #include <fusion/regex/route.h>
 #include <fusion/http/request/input-capture.h>
@@ -61,28 +61,26 @@ namespace RouteService {
                 const char* user_method_name     = handler_opt[1];
 
                 Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
-                Request *request = new Request();
-                request->uri_route = uri_route;        
 
-                Php::Object user_controller;
-
+                // When __construct exists in user controller class, binding DI to constructor instead user_method_name
                 if(Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
+                    // Import default dependencies lib for Dependency Injection
                     std::vector<Php::Value> args = Container::loader(user_controller_name, "__construct");
 
                     Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
                     Php::Value class_init = reflect_class.call("newInstanceArgs", args);
                     class_init.call(user_method_name);
-                } else {
+                }
+
+                // When __construct not exists in user controller class, binding DI to user_method_name
+                if(! (bool)Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
+                    // Import default dependencies lib for Dependency Injection
+                    std::vector<Php::Value> args = Container::loader(user_controller_name, user_method_name);
 
                     Php::Value class_method;
                     class_method[0] = Php::Object(user_controller_name.c_str());
                     class_method[1] = user_method_name;
-                    std::vector<Php::Value> args = Container::loader(user_controller_name, user_method_name);
                     Php::call("call_user_func_array", class_method, args);
-
-                    // user_controller.call(user_method_name, Php::Object("Fusion\\Http\\Request", request));
-                    // user_controller = Php::Object(user_controller_name.c_str());
-                    // user_controller.call(user_method_name, args);
                 }
 
                 return 0;
@@ -113,9 +111,15 @@ namespace RouteService {
 
             std::string get_method  = Database::get::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"});
             std::string post_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "POST_METHOD", "is_null"});
+            std::string put_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "PUT_METHOD", "is_null"});
+            std::string patch_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "PATCH_METHOD", "is_null"});
+            std::string delete_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"});
 
-            if(get_method == "true" && request_method == "GET")     error_page::get::code_404();    
-            if(post_method == "true" && request_method == "POST")   error_page::post::code_404();    
+            if(get_method == "true" && request_method == "GET")         error_page::Get::code_404();    
+            if(post_method == "true" && request_method == "POST")       error_page::Post::code_404();   
+            if(put_method == "true" && request_method == "PUT")         error_page::Put::code_404();   
+            if(patch_method == "true" && request_method == "PATCH")     error_page::Patch::code_404();   
+            if(delete_method == "true" && request_method == "DELETE")   error_page::Delete::code_404();    
         }
 
         /**

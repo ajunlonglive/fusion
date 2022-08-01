@@ -3,7 +3,7 @@
 #include <phpcpp.h>
 #include <fusion/database/core.cpp>
 #include <fusion/http/request/input-capture.h>
-#include <fusion/error/message.cpp>
+#include <fusion/error/message.hpp>
 
 class Request : public Php::Base {
     public: std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});

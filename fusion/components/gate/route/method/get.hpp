@@ -36,13 +36,6 @@ class RouteGet : public Php::Base {
                 if(SmartRouter::handle_input_uri_guard(escape_uri_route) || uri_route == request_uri) {
 
                     Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "false");
-
-                    // Php::Value gett = param;
-                    // std::string cclass = gett[1][0];
-                    // std::string mmethod = gett[1][1];
-
-                    // Container::loader(cclass, mmethod);
-
                     RouteService::web::assign(escape_uri_route, handler_opt);
                 }
             }
@@ -50,9 +43,4 @@ class RouteGet : public Php::Base {
 
     }   
 
-    public: void test() {
-        Php::out << "<br />hello test" << "<br />" << std::flush;
-    }
-
-    public: ~RouteGet() {}
 };

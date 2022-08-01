@@ -9,8 +9,11 @@
 #include <iostream>
 
 
-#include <fusion/components/gate/route/method/get.h>
-#include <fusion/components/gate/route/method/post.h>
+#include <fusion/components/gate/route/method/get.hpp>
+#include <fusion/components/gate/route/method/post.hpp>
+#include <fusion/components/gate/route/method/put.hpp>
+#include <fusion/components/gate/route/method/patch.hpp>
+#include <fusion/components/gate/route/method/delete.hpp>
 
 
 class Route : public Php::Base {
@@ -30,5 +33,26 @@ class Route : public Php::Base {
 
         RoutePost *routepost = new RoutePost(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Post", routepost);
+    }
+
+    public: Php::Value static Put(Php::Parameters &param) {
+        Route __construct;
+
+        RoutePut *routeput = new RoutePut(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Put", routeput);
+    }
+
+    public: Php::Value static Patch(Php::Parameters &param) {
+        Route __construct;
+
+        RoutePatch *routepatch = new RoutePatch(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Patch", routepatch);
+    }
+
+    public: Php::Value static Delete(Php::Parameters &param) {
+        Route __construct;
+
+        RouteDelete *routedelete = new RouteDelete(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Delete", routedelete);
     }
 };

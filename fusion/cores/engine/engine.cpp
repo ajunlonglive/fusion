@@ -3,7 +3,7 @@
 #include <phpcpp.h>
 #include <fusion/database/core.cpp>
 #include <fusion/cores/autoload/autoload.cpp>
-#include <fusion/error/message.cpp>
+#include <fusion/error/message.hpp>
 #include <fusion/const/construct.cpp>
 #include <fusion/dest/destruct.cpp>
 

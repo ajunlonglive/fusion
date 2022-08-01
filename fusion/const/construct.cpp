@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 #include <fusion/database/core.cpp>
-#include <fusion/error/message.cpp>
+#include <fusion/error/message.hpp>
 #include <fusion/regex/route.h>
 #include <fusion/components/gate/route/provider/smart.h>
 
@@ -40,6 +40,9 @@ namespace Construct {
 
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "POST_METHOD", "is_null"}, "true");
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "PUT_METHOD", "is_null"}, "true");
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "PATCH_METHOD", "is_null"}, "true");
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"}, "true");
 
 
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);

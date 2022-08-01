@@ -18,16 +18,19 @@ extern "C" {
 
         Php::Namespace fusion("Fusion");
 
-        Php::Class<Engine>      engine("Cores\\Engine");
-        Php::Class<Autoload>    autoload("Cores\\Autoload");
-        Php::Class<Route>       route("Components\\Gate\\Route");
-        Php::Class<Controller>  controller("Controllers\\Controller");
+        Php::Class<Engine>          engine("Cores\\Engine");
+        Php::Class<Autoload>        autoload("Cores\\Autoload");
+        Php::Class<Route>           route("Components\\Gate\\Route");
+        Php::Class<Controller>      controller("Controllers\\Controller");
         
-        Php::Class<Request>     request("Http\\Request");
-        Php::Class<RouteGet>    routeget("Components\\Gate\\Route\\Method\\Get");
-        Php::Class<RoutePost>   routepost("Components\\Gate\\Route\\Method\\Post");
+        Php::Class<Request>         request("Http\\Request");
+        Php::Class<RouteGet>        routeget("Components\\Gate\\Route\\Method\\Get");
+        Php::Class<RoutePost>       routepost("Components\\Gate\\Route\\Method\\Post");
+        Php::Class<RoutePut>        routeput("Components\\Gate\\Route\\Method\\Put");
+        Php::Class<RoutePatch>      routepatch("Components\\Gate\\Route\\Method\\Patch");
+        Php::Class<RouteDelete>     routedelete("Components\\Gate\\Route\\Method\\Delete");
 
-        Php::Class<Constra>     constra("Views\\Constra");
+        Php::Class<Constra>         constra("Views\\Constra");
         
         constra.method<&Constra::__construct>("__construct", {});
         constra.method<&Constra::__destruct>("__destruct", {});
@@ -36,7 +39,7 @@ extern "C" {
         Php::Class<unit::foo> foo("foo");
         Php::Class<unit::bar> bar("bar");
 
-        routeget.method<&RouteGet::test>("test", {});
+        // routeget.method<&RouteGet::test>("test", {});
 
         // constra.method<&Constra::test>("test", {});
 
@@ -54,6 +57,9 @@ extern "C" {
 
         route.method<&Route::Get>("Get", {});
         route.method<&Route::Post>("Post", {});
+        route.method<&Route::Put>("Put", {});
+        route.method<&Route::Patch>("Patch", {});
+        route.method<&Route::Delete>("Delete", {});
 
         controller.method<&Controller::Class>("Class", {});
         
@@ -69,8 +75,13 @@ extern "C" {
         fusion.add(std::move(engine));
         fusion.add(std::move(autoload));
         fusion.add(std::move(route));
+
         fusion.add(std::move(routeget));
         fusion.add(std::move(routepost));
+        fusion.add(std::move(routeput));
+        fusion.add(std::move(routepatch));
+        fusion.add(std::move(routedelete));
+
         fusion.add(std::move(controller));
         fusion.add(std::move(request));
         fusion.add(std::move(unit));

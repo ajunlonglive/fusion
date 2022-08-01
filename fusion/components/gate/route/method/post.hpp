@@ -2,7 +2,12 @@
 
 #include <phpcpp.h>
 
+#include <fusion/const/construct.cpp>
+#include <fusion/components/gate/route/provider/service.h>
+#include <fusion/components/gate/route/provider/smart.h>
 #include <fusion/database/core.cpp>
+#include <fusion/regex/route.h>
+#include <iostream>
 
 class RoutePost : public Php::Base {
 
@@ -35,4 +40,5 @@ class RoutePost : public Php::Base {
             }
         }
     }
+    
 };
