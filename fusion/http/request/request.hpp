@@ -55,6 +55,7 @@ class Request : public Php::Base {
             }
             return Error::message::captureable_not_found();
         }
+
         return Error::message::captureable_not_found();
     }   
 };

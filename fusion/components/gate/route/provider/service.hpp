@@ -54,11 +54,13 @@ namespace RouteService {
              * @note Reserved method for Redirect
              * 
              */
-            if(request_method == "REDIRECT")
+            if(request_method == "REDIRECT") {
                 Php::eval("header('Location: "+(std::string)handler_opt+"');");
-
+                return 0;
+            }
             
-            // Php::out << " ini ada router nya bos #KK7 -- " << std::flush;
+            Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
+
             /**
              * @note Reserved method for Get, Post, Put, Patch, Delete
              * 
@@ -84,9 +86,7 @@ namespace RouteService {
                     if(Php::count(handler_opt) > 2)
                         Error::message::handler_opt_many_args();
 
-                    Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
-
-                    // When __construct exists in user controller class, binding DI to constructor instead user_method_name
+                    // 1. When __construct exists in user controller class, binding DI to constructor instead user_method_name
                     if(Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
                         // Import default dependencies lib for Dependency Injection
                         std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, "__construct");
@@ -96,7 +96,7 @@ namespace RouteService {
                         class_init.call(user_method_name);
                     }
 
-                    // When __construct not exists in user controller class, binding DI to user_method_name
+                    // 2. When __construct not exists in user controller class, binding DI to user_method_name
                     if(! (bool)Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
 
                         std::string user_controller_name = handler_opt[0];
@@ -139,6 +139,7 @@ namespace RouteService {
 
             // handle error page/header for incoming http request
             std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
+
 
             std::string get_method  = Database::get::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"});
             std::string post_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "POST_METHOD", "is_null"});

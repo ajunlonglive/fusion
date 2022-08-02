@@ -14,7 +14,10 @@
 
 #include <fusion/cores/engine/engine.hpp>
 #include <fusion/cores/autoload/autoload.hpp>   
+
 #include <fusion/components/gate/route/route.hpp>
+#include <fusion/components/gate/route/context.hpp>
+
 #include <fusion/controllers/controller/controller.hpp>
 #include <fusion/http/request/input-capture.hpp>
 #include <fusion/components/gate/route/unit.hpp>

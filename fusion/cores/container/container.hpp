@@ -54,13 +54,19 @@ namespace Container {
          * 
          */
         public: std::vector<Php::Value> static Method(std::string class_name, std::string method_name) {
-            Php::Value dependencies = Php::eval("$ps = (new ReflectionMethod('" +class_name+ "', '" +method_name+ "'))->getParameters(); $dp = []; foreach($ps as $p) { $dp[(string) $p->getName()] = (string) $p->getType();}return $dp;").mapValue();
-
+            // Php::Value dependencies = Php::eval("$ps = (new ReflectionMethod('" +class_name+ "', '" +method_name+ "'))->getParameters(); $dp = []; foreach($ps as $p) { $dp[(string) $p->getName()] = (string) $p->getType();}return $dp;").mapValue();
+            Php::Value reflect_function = Php::Object("ReflectionMethod", class_name, method_name);
+            Php::Value get_param = reflect_function.call("GetParameters").mapValue();
 
             std::vector<Php::Value> depen_group;
-            for(auto &param : dependencies) {
-                depen_group.push_back(default_list(param.second));
+            for(auto &p : get_param) {
+                Php::Value get_type = (p.second).call("getType");
+                Php::out << (std::string)get_type << std::flush;
+                depen_group.push_back(default_list( (std::string)get_type ));
             }
+            // for(auto &param : dependencies) {
+            //     depen_group.push_back(default_list(param.second));
+            // }
 
             return depen_group;
         }
@@ -82,7 +88,6 @@ namespace Container {
             for(auto &p : get_param) {
                 Php::Value get_type = (p.second).call("getType");
                 depen_group.push_back(default_list( (std::string)get_type ));
-                Php::out << (std::string)get_type << std::flush;
             }
 
             // std::vector<Php::Value> depen_group;

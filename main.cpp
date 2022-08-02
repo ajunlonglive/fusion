@@ -21,6 +21,7 @@ extern "C" {
         Php::Class<Engine>          engine("Cores\\Engine");
         Php::Class<Autoload>        autoload("Cores\\Autoload");
         Php::Class<Route>           route("Components\\Gate\\Route");
+        Php::Class<RouteContext>    routecontext("Components\\Gate\\Route\\Context");
         Php::Class<Controller>      controller("Controllers\\Controller");
         
         Php::Class<Request>         request("Http\\Request");
@@ -65,20 +66,18 @@ extern "C" {
         route.method<&Route::Redirect>("Redirect", {});
         route.method<&Route::Any>("Any", {});
 
+        routecontext.method<&RouteContext::code_501>("code_501", {});
+
         controller.method<&Controller::Class>("Class", {});
         
         request.method<&Request::__construct>("__construct", {});
         request.method<&Request::uri>("uri", {});
         request.method<&Request::get>("get", {});
-        // request.property("get", "", Php::Public);
-
-        // adding class to namespace
-        // Php::Namespace constra("Views");
-        // constra.add<Constra>("Constra");
 
         fusion.add(std::move(engine));
         fusion.add(std::move(autoload));
         fusion.add(std::move(route));
+        fusion.add(std::move(routecontext));
 
         fusion.add(std::move(routeget));
         fusion.add(std::move(routepost));
