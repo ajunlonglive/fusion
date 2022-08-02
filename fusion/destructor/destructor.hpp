@@ -5,7 +5,7 @@
 #include <fusion/cores/autoload/loader.hpp>
 #include <fusion/components/gate/route/provider/service.hpp>
 #include <fusion/components/gate/route/provider/smart.hpp>
-#include <fusion/dest/destruct.hpp>
+#include <fusion/destructor/destructor.hpp>
 
 class Destruct : public Php::Base {
     /**
@@ -14,6 +14,7 @@ class Destruct : public Php::Base {
      *        if same route uri was found, Fusion will thrown error and stop the code execute for else it will continue
      */
     public: void static route_init() {
+
         // running first loader::route, grab all php files which include router config and aneccesary
         loader::route();
         

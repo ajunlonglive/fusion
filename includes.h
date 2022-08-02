@@ -18,10 +18,14 @@
 #include <fusion/controllers/controller/controller.hpp>
 #include <fusion/http/request/input-capture.hpp>
 #include <fusion/components/gate/route/unit.hpp>
+
 #include <fusion/components/gate/route/method/get.hpp>
 #include <fusion/components/gate/route/method/post.hpp>
 #include <fusion/components/gate/route/method/put.hpp>
 #include <fusion/components/gate/route/method/delete.hpp>
 #include <fusion/components/gate/route/method/patch.hpp>
+#include <fusion/components/gate/route/method/redirect.hpp>
+#include <fusion/components/gate/route/method/any.hpp>
+
 #include <fusion/views/constra/constra.hpp>
 #include <fusion/cores/container/container.hpp>

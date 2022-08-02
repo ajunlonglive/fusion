@@ -9,19 +9,22 @@
 #include <fusion/regex/route.hpp>
 #include <iostream>
 
-class RoutePost : public Php::Base {
+class RouteRedirect : public Php::Base {
 
     // constructor
-    public: RoutePost(Php::Parameters &param) {
+    public: RouteRedirect(Php::Parameters &param) {
         if(Php::count(param) < 2) 
             Error::message::empty_route_get_param();
 
         if(Php::count(param) > 2)
             Error::message::many_route_get_param();
 
+        std::string uri_type = Php::call("gettype", (Php::Value)param[1]).stringValue();
+        if(uri_type != "string")
+            Error::message::untype_route_redirect_param(uri_type);
+
         std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
 
-        if(request_method == "POST") {
             std::string uri_route   = param[0];
             std::string escape_uri_route = Regex::uri::escape_request_uri(uri_route + "/");
             Php::Value handler_opt  = param[1];
@@ -33,12 +36,11 @@ class RoutePost : public Php::Base {
                 std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
 
                 if(SmartRouter::handle_input_uri_guard(escape_uri_route) || uri_route == request_uri) {
-                    Database::set::string({"FUSION_STORE", "FS_ROUTE", "POST_METHOD", "is_null"}, "false");
+                    Database::set::string({"FUSION_STORE", "FS_ROUTE", "PUT_METHOD", "is_null"}, "false");
 
-                    RouteService::web::assign(escape_uri_route, handler_opt, "POST");
+                    RouteService::web::assign(escape_uri_route, handler_opt, "REDIRECT");
                 }
             }
-        }
     }
-    
+
 };

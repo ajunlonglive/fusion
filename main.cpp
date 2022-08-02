@@ -29,6 +29,8 @@ extern "C" {
         Php::Class<RoutePut>        routeput("Components\\Gate\\Route\\Method\\Put");
         Php::Class<RoutePatch>      routepatch("Components\\Gate\\Route\\Method\\Patch");
         Php::Class<RouteDelete>     routedelete("Components\\Gate\\Route\\Method\\Delete");
+        Php::Class<RouteRedirect>   routeredirect("Components\\Gate\\Route\\Method\\Redirect");
+        Php::Class<RouteAny>        routeany("Components\\Gate\\Route\\Method\\Any");
 
         Php::Class<Constra>         constra("Views\\Constra");
         
@@ -60,6 +62,8 @@ extern "C" {
         route.method<&Route::Put>("Put", {});
         route.method<&Route::Patch>("Patch", {});
         route.method<&Route::Delete>("Delete", {});
+        route.method<&Route::Redirect>("Redirect", {});
+        route.method<&Route::Any>("Any", {});
 
         controller.method<&Controller::Class>("Class", {});
         
@@ -81,6 +85,8 @@ extern "C" {
         fusion.add(std::move(routeput));
         fusion.add(std::move(routepatch));
         fusion.add(std::move(routedelete));
+        fusion.add(std::move(routeredirect));
+        fusion.add(std::move(routeany));
 
         fusion.add(std::move(controller));
         fusion.add(std::move(request));

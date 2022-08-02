@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/const/construct.hpp>
+#include <fusion/constructor/constructor.hpp>
 #include <fusion/components/gate/route/provider/service.hpp>
 #include <fusion/components/gate/route/provider/smart.hpp>
 #include <fusion/database/core.hpp>
@@ -36,7 +36,7 @@ class RouteGet : public Php::Base {
                 if(SmartRouter::handle_input_uri_guard(escape_uri_route) || uri_route == request_uri) {
 
                     Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "false");
-                    RouteService::web::assign(escape_uri_route, handler_opt);
+                    RouteService::web::assign(escape_uri_route, handler_opt, "GET");
                 }
             }
         }

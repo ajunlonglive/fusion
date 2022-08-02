@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/const/construct.hpp>
+#include <fusion/constructor/constructor.hpp>
 #include <fusion/components/gate/route/provider/service.hpp>
 #include <fusion/cores/container/container.hpp>
 #include <fusion/regex/route.hpp>
@@ -14,6 +14,8 @@
 #include <fusion/components/gate/route/method/put.hpp>
 #include <fusion/components/gate/route/method/patch.hpp>
 #include <fusion/components/gate/route/method/delete.hpp>
+#include <fusion/components/gate/route/method/redirect.hpp>
+#include <fusion/components/gate/route/method/any.hpp>
 
 
 class Route : public Php::Base {
@@ -23,6 +25,8 @@ class Route : public Php::Base {
 
     public: Php::Value static Get(Php::Parameters &param) {
         Route __construct;
+
+        // Php::out << " ini ada router nya bos #1 -- " << std::flush;
 
         RouteGet *routeget = new RouteGet(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Get", routeget);
@@ -54,5 +58,19 @@ class Route : public Php::Base {
 
         RouteDelete *routedelete = new RouteDelete(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Delete", routedelete);
+    }
+    
+    public: Php::Value static Redirect(Php::Parameters &param) {
+        Route __construct;
+
+        RouteRedirect *routeredirect = new RouteRedirect(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Delete", routeredirect);
+    }
+
+    public: Php::Value static Any(Php::Parameters &param) {
+        Route __construct;
+
+        RouteAny *routeany = new RouteAny(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Any", routeany);
     }
 };

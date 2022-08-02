@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <fusion/const/construct.hpp>
+#include <fusion/constructor/constructor.hpp>
 #include <fusion/components/gate/route/provider/service.hpp>
 #include <fusion/components/gate/route/provider/smart.hpp>
 #include <fusion/database/core.hpp>
@@ -22,7 +22,6 @@ class RoutePut : public Php::Base {
         std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
 
         if(request_method == "PUT") {
-            Php::out << "put was assigned" << std::flush;
             std::string uri_route   = param[0];
             std::string escape_uri_route = Regex::uri::escape_request_uri(uri_route + "/");
             Php::Value handler_opt  = param[1];
@@ -36,7 +35,7 @@ class RoutePut : public Php::Base {
                 if(SmartRouter::handle_input_uri_guard(escape_uri_route) || uri_route == request_uri) {
                     Database::set::string({"FUSION_STORE", "FS_ROUTE", "PUT_METHOD", "is_null"}, "false");
 
-                    RouteService::web::assign(escape_uri_route, handler_opt);
+                    RouteService::web::assign(escape_uri_route, handler_opt, "PUT");
                 }
             }
         }

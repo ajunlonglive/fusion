@@ -4,7 +4,7 @@
 
 #include <fusion/error/message.hpp>
 #include <fusion/cores/autoload/loader.hpp>
-#include <fusion/const/construct.hpp>
+#include <fusion/constructor/constructor.hpp>
 
 class Autoload : public Php::Base {
     public: Php::Value static Config(Php::Parameters &param) {

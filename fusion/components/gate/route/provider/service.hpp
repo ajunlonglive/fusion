@@ -40,59 +40,90 @@ namespace RouteService {
          *       1. DI/Dependency Injection to controller class, with return action argument (see sub comment top of method)
          *       2. function callback with injected context/request from Http stuff (see sub comment top of method)
          * 
-         * @param uri_route     (string) User router address
-         * @param handler_opt   (Php::Value) A param for callback or action context
+         * @param uri_route         (std::string) User router address
+         * @param handler_opt       (Php::Value) A param for callback or action context
+         * @param request_method    (std::string) Request method for parameter action (GET, POST, PUT, etc.)
          * 
          * @return void()       A void return only for blocking return each state conditional (blocking return)
          * 
          */
-        public: Php::Value static assign(std::string uri_route, Php::Value handler_opt) {
+        public: Php::Value static assign(std::string uri_route, Php::Value handler_opt, std::string request_method) {
+
+            // Php::out << " ini ada router nya bos #KK6 -- " << std::flush;
+            /**
+             * @note Reserved method for Redirect
+             * 
+             */
+            if(request_method == "REDIRECT")
+                Php::eval("header('Location: "+(std::string)handler_opt+"');");
+
             
-            // 1. Router handler with Dependencies Injection
-            if(Php::is_array(handler_opt).boolValue()) {      
-                      
-                if(Php::count(handler_opt) < 2)
-                    Error::message::handler_opt_empty_args();
+            // Php::out << " ini ada router nya bos #KK7 -- " << std::flush;
+            /**
+             * @note Reserved method for Get, Post, Put, Patch, Delete
+             * 
+             */
+            if(
+                request_method == "GET"   || 
+                request_method == "POST"  ||
+                request_method == "PUT"   ||
+                request_method == "PATCH" ||
+                request_method == "DELETE" ||
+                request_method == "ANY"
+            ) {
 
-                if(Php::count(handler_opt) > 2)
-                    Error::message::handler_opt_many_args();
+                // 1. Router handler with Dependencies Injection
+                if(Php::is_array(handler_opt).boolValue()) {      
+                        
+                    std::string user_controller_name = handler_opt[0];
+                    const char* user_method_name     = handler_opt[1];
 
-                std::string user_controller_name = handler_opt[0];
-                const char* user_method_name     = handler_opt[1];
+                    if(Php::count(handler_opt) < 2)
+                        Error::message::handler_opt_empty_args();
 
-                Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
+                    if(Php::count(handler_opt) > 2)
+                        Error::message::handler_opt_many_args();
 
-                // When __construct exists in user controller class, binding DI to constructor instead user_method_name
-                if(Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
+                    Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
+
+                    // When __construct exists in user controller class, binding DI to constructor instead user_method_name
+                    if(Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
+                        // Import default dependencies lib for Dependency Injection
+                        std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, "__construct");
+
+                        Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
+                        Php::Value class_init = reflect_class.call("newInstanceArgs", args);
+                        class_init.call(user_method_name);
+                    }
+
+                    // When __construct not exists in user controller class, binding DI to user_method_name
+                    if(! (bool)Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
+
+                        std::string user_controller_name = handler_opt[0];
+                        const char* user_method_name     = handler_opt[1];
+
+                        // Import default dependencies lib for Dependency Injection
+                        std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, user_method_name);
+
+                        Php::Value class_method;
+                        class_method[0] = Php::Object(user_controller_name.c_str());
+                        class_method[1] = user_method_name;
+                        Php::call("call_user_func_array", class_method, args);
+                    }
+
+                    return 0;
+                }               
+
+                // 2. Router handler with callback action, injected (Object)Request, etc.. as param
+                if(Php::call("is_callable", handler_opt).boolValue()) {
                     // Import default dependencies lib for Dependency Injection
-                    std::vector<Php::Value> args = Container::loader(user_controller_name, "__construct");
+                    std::vector<Php::Value> args = Container::Loader::Function(handler_opt);
 
-                    Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
-                    Php::Value class_init = reflect_class.call("newInstanceArgs", args);
-                    class_init.call(user_method_name);
+                    Php::call("call_user_func_array", handler_opt, args);
+                    return 0;
                 }
 
-                // When __construct not exists in user controller class, binding DI to user_method_name
-                if(! (bool)Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
-                    // Import default dependencies lib for Dependency Injection
-                    std::vector<Php::Value> args = Container::loader(user_controller_name, user_method_name);
 
-                    Php::Value class_method;
-                    class_method[0] = Php::Object(user_controller_name.c_str());
-                    class_method[1] = user_method_name;
-                    Php::call("call_user_func_array", class_method, args);
-                }
-
-                return 0;
-            }               
-
-            // 2. Router handler with callback action, injected (Object)Request, etc.. as param
-            if(Php::call("is_callable", handler_opt).boolValue()) {
-                Request *request = new Request;
-                request->uri_route = uri_route;        
-
-                handler_opt(Php::Object("Fusion\\Http\\Request", request));
-                return 0;
             }
 
             return 0;

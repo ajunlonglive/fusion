@@ -46,6 +46,16 @@ namespace Error {
             Php::error << "" << std::flush;
         }
 
+
+
+        public: void static untype_route_redirect_param(std::string uri_type) {
+            std::string error_message = cout("'Fusion/Controllers/Route::Redirect()' parameter 2 type is a string. " +uri_type+ " given.");
+            Php::out << error_message << std::flush;
+            Php::error << "" << std::flush;
+        }
+
+
+
         public: void static handler_opt_empty_args() {
             std::string error_message = cout("'Fusion/Controllers/Route::Get()' second parameter need more context");
             Php::out << error_message << std::flush;
