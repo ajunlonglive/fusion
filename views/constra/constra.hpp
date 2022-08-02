@@ -5,6 +5,7 @@
 #include <views/constra/context.hpp>
 #include <regex/wrapper/pcre2.hpp>
 #include <database/core.hpp>
+#include <utils/function.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -24,10 +25,14 @@ class Constra : public Php::Base {
     public: void __construct(Php::Parameters &param) {
         if(Php::count(param) > 2)
             Php::error << "param at least only 2 arguments" << std::flush;
-        std::string fname = param[0];
 
-        variables = param[1];
-        filename = fname;
+        if(Php::count(param) < 2) {
+            filename = (std::string)param[0];
+        } else {
+            variables = (Php::Value)param[1];
+            filename = (std::string)param[0];
+        }
+
     }
 
     private: void get_file_resource() {
@@ -55,47 +60,43 @@ class Constra : public Php::Base {
     private: void interprete_template() {
 
         std::string list_pattern;
-        // list_pattern += "test\\((.*?)\\)";
-        list_pattern += "(?<openphp>\\%php\\s+)|";
-        list_pattern += "(?<closephp>\\%ephp)|";
-
-        list_pattern += "(?<openif>\\%if\\s*\\((?<opif>.*?)\\))|";
-
-        // list_pattern += "(?<openif>\\%if)|";
-        // list_pattern += "(?<copenif>\\)\\:)|";
-
-        list_pattern += "(?<elif>\\%elif\\s*\\((?<opel>.*?)\\))|";
-        list_pattern += "(?<else>\\%else)|";
-        list_pattern += "(?<endif>\\%eif)|";
-
-        list_pattern += "(?<variable>\\{\\{(?<var>.*?)\\}\\})|";
-        
-        list_pattern += "(?<foreach>\\%for\\s*\\((?<arrfor>.*?)as(?<pararr>.*?)\\))|";
-        list_pattern += "(?<for>\\%for\\s*\\((?!(.*?)as(.*?))(?<forctx>.*?)\\))|";
-        list_pattern += "(?<endfor>\\%efor)";
-        // list_pattern += "(?<test>test\\((?<cc>.*?)\\))";
-
         std::string list_replacement;
-        // list_replacement += "test\\($1\\)";
+
+        list_pattern += "(?<openphp>\\%php\\s+)|";
         list_replacement += "${openphp:+ \\<\\?php }";
+        
+        list_pattern += "(?<closephp>\\%ephp)|";
         list_replacement += "${closephp:+ \\?\\>}";
 
+        list_pattern += "(?<openif>\\%if\\s*\\((?<opif>.*?)\\))|";
         list_replacement += "${openif:+\\<\\?php if\\(${opif}\\)\\: \\?\\>}";
-        // list_replacement += "${openif:+\\<\\?php if}";
-        // list_replacement += "${copenif:+\\)\\: \\?\\>}";
 
+        list_pattern += "(?<elif>\\%elif\\s*\\((?<opel>.*?)\\))|";
         list_replacement += "${elif:+\\<\\?php elseif\\(${opel}\\)\\: \\?\\>}";
+
+        list_pattern += "(?<else>\\%else)|";
         list_replacement += "${else:+\\<\\?php else\\: \\?\\>}";
+        
+        list_pattern += "(?<endif>\\%eif)|";
         list_replacement += "${endif:+\\<\\?php endif\\; \\?\\>}";
 
+        list_pattern += "(?<variable>\\{\\{(?<var>.*?)\\}\\})|";
         list_replacement += "${variable:+\\<\\?php echo ${var}; \\?\\>}";
-
-        list_replacement += "${foreach:+\\<\\?php foreach\\(${arrfor} as ${pararr}\\) \\{ \\?\\>}";
-        list_replacement += "${for:+\\<\\?php for\\(${forctx}\\) \\{ \\?\\>}";
-        list_replacement += "${endfor:+\\<\\?php \\} \\?\\>}";
         
-        // list_replacement += "${test:+tost\\(${cc}\\)}";
+        list_pattern += "(?<foreach>\\%for\\s*\\((?<arrfor>.*?)as(?<pararr>.*?)\\))|";
+        list_replacement += "${foreach:+\\<\\?php foreach\\(${arrfor} as ${pararr}\\) \\{ \\?\\>}";
 
+        list_pattern += "(?<for>\\%for\\s*\\((?!(.*?)as(.*?))(?<forctx>.*?)\\))|";
+        list_replacement += "${for:+\\<\\?php for\\(${forctx}\\) \\{ \\?\\>}";
+
+        list_pattern += "(?<endfor>\\%efor)";
+        list_replacement += "${endfor:+\\<\\?php \\} \\?\\>}";
+
+
+
+
+
+        
         regexp::replace(list_pattern.c_str(), render_resource.c_str(), list_replacement.c_str(), [&](const char *replaced) {
             render_resource = (std::string)replaced;
         });
@@ -111,7 +112,7 @@ class Constra : public Php::Base {
 
     public: void __destruct() {
         get_file_resource();
-
+        
         regist_variable();
 
         interprete_template();
@@ -120,6 +121,6 @@ class Constra : public Php::Base {
 
         Php::require_once("../storage/fusion/cache/" +file_id);
 
-        // std::filesystem::remove("../storage/fusion/cache/" +file_id);
+        std::filesystem::remove("../storage/fusion/cache/" +file_id);
     }
 };
