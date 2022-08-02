@@ -24,9 +24,11 @@
 
 #include <fusion/components/gate/route/method/get.hpp>
 #include <fusion/components/gate/route/method/post.hpp>
+#include <fusion/components/gate/route/method/head.hpp>
 #include <fusion/components/gate/route/method/put.hpp>
-#include <fusion/components/gate/route/method/delete.hpp>
 #include <fusion/components/gate/route/method/patch.hpp>
+#include <fusion/components/gate/route/method/delete.hpp>
+#include <fusion/components/gate/route/method/options.hpp>
 #include <fusion/components/gate/route/method/redirect.hpp>
 #include <fusion/components/gate/route/method/any.hpp>
 

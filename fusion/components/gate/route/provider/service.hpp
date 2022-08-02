@@ -149,9 +149,11 @@ namespace RouteService {
 
             if(get_method == "true" && request_method == "GET")         error_page::Get::code_404();    
             if(post_method == "true" && request_method == "POST")       error_page::Post::code_404();   
+            if(post_method == "true" && request_method == "HEAD")       error_page::Post::code_404();   
             if(put_method == "true" && request_method == "PUT")         error_page::Put::code_404();   
             if(patch_method == "true" && request_method == "PATCH")     error_page::Patch::code_404();   
             if(delete_method == "true" && request_method == "DELETE")   error_page::Delete::code_404();    
+            if(delete_method == "true" && request_method == "OPTIONS")   error_page::Delete::code_404();    
         }
 
         /**

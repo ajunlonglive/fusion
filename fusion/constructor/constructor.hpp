@@ -40,9 +40,11 @@ namespace Construct {
 
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "POST_METHOD", "is_null"}, "true");
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "HEAD_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "PUT_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "PATCH_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"}, "true");
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "OPTIONS_METHOD", "is_null"}, "true");
 
 
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);

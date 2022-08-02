@@ -27,9 +27,11 @@ extern "C" {
         Php::Class<Request>         request("Http\\Request");
         Php::Class<RouteGet>        routeget("Components\\Gate\\Route\\Method\\Get");
         Php::Class<RoutePost>       routepost("Components\\Gate\\Route\\Method\\Post");
+        Php::Class<RouteHead>       routehead("Components\\Gate\\Route\\Method\\Head");
         Php::Class<RoutePut>        routeput("Components\\Gate\\Route\\Method\\Put");
         Php::Class<RoutePatch>      routepatch("Components\\Gate\\Route\\Method\\Patch");
         Php::Class<RouteDelete>     routedelete("Components\\Gate\\Route\\Method\\Delete");
+        Php::Class<RouteOptions>    routeoptions("Components\\Gate\\Route\\Method\\Options");
         Php::Class<RouteRedirect>   routeredirect("Components\\Gate\\Route\\Method\\Redirect");
         Php::Class<RouteAny>        routeany("Components\\Gate\\Route\\Method\\Any");
 
@@ -60,9 +62,11 @@ extern "C" {
 
         route.method<&Route::Get>("Get", {});
         route.method<&Route::Post>("Post", {});
+        route.method<&Route::Head>("Head", {});
         route.method<&Route::Put>("Put", {});
         route.method<&Route::Patch>("Patch", {});
         route.method<&Route::Delete>("Delete", {});
+        route.method<&Route::Options>("Options", {});
         route.method<&Route::Redirect>("Redirect", {});
         route.method<&Route::Any>("Any", {});
 
@@ -81,9 +85,11 @@ extern "C" {
 
         fusion.add(std::move(routeget));
         fusion.add(std::move(routepost));
+        fusion.add(std::move(routehead));
         fusion.add(std::move(routeput));
         fusion.add(std::move(routepatch));
         fusion.add(std::move(routedelete));
+        fusion.add(std::move(routeoptions));
         fusion.add(std::move(routeredirect));
         fusion.add(std::move(routeany));
 

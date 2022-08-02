@@ -11,9 +11,11 @@
 
 #include <fusion/components/gate/route/method/get.hpp>
 #include <fusion/components/gate/route/method/post.hpp>
+#include <fusion/components/gate/route/method/head.hpp>
 #include <fusion/components/gate/route/method/put.hpp>
 #include <fusion/components/gate/route/method/patch.hpp>
 #include <fusion/components/gate/route/method/delete.hpp>
+#include <fusion/components/gate/route/method/options.hpp>
 #include <fusion/components/gate/route/method/redirect.hpp>
 #include <fusion/components/gate/route/method/any.hpp>
 
@@ -38,6 +40,13 @@ class Route : public Php::Base {
         RoutePost *routepost = new RoutePost(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Post", routepost);
     }
+  
+    public: Php::Value static Head(Php::Parameters &param) {
+        Route __construct;
+
+        RouteHead *routehead = new RouteHead(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Head", routehead);
+    }
 
     public: Php::Value static Put(Php::Parameters &param) {
         Route __construct;
@@ -58,6 +67,13 @@ class Route : public Php::Base {
 
         RouteDelete *routedelete = new RouteDelete(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Delete", routedelete);
+    }
+     
+    public: Php::Value static Options(Php::Parameters &param) {
+        Route __construct;
+
+        RouteOptions *routeoptions = new RouteOptions(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Options", routeoptions);
     }
     
     public: Php::Value static Redirect(Php::Parameters &param) {
