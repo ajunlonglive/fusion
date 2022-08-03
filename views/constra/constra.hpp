@@ -6,6 +6,7 @@
 #include <regex/wrapper/pcre2.hpp>
 #include <database/core.hpp>
 #include <utils/function.hpp>
+#include <error/message.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -24,7 +25,7 @@ class Constra : public Php::Base {
 
     public: void __construct(Php::Parameters &param) {
         if(Php::count(param) > 2)
-            Php::error << "param at least only 2 arguments" << std::flush;
+            Error::message::constra_too_much_arguments();
 
         if(Php::count(param) < 2) {
             filename = (std::string)param[0];
@@ -93,10 +94,6 @@ class Constra : public Php::Base {
         list_replacement += "${endfor:+\\<\\?php \\} \\?\\>}";
 
 
-
-
-
-        
         regexp::replace(list_pattern.c_str(), render_resource.c_str(), list_replacement.c_str(), [&](const char *replaced) {
             render_resource = (std::string)replaced;
         });
@@ -111,16 +108,22 @@ class Constra : public Php::Base {
     }
 
     public: void __destruct() {
+        // Get the raw view template resource (e.g. index.phtml) assign as callable variable property
         get_file_resource();
         
+        // Register variable to "runtime" interpreter as json_data to simulate string casting
         regist_variable();
 
+        // Do interpreter raw resource to finally work-code run
         interprete_template();
 
+        // Caching the work-code to cache file in user
         cache_resource_to_file();
 
+        // Calling the caches file
         Php::require_once("../storage/fusion/cache/" +file_id);
 
+        // Remove current caches file, using session_id and prefix constra as parameter file name
         std::filesystem::remove("../storage/fusion/cache/" +file_id);
     }
 };

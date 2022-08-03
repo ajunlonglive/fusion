@@ -11,7 +11,7 @@
 
 class DefaultContainer {
     public: Php::Object object_class(std::string method_name) {
-        std::map <std::string, Php::Object> dependencies_list;
+        std::map<std::string, Php::Object> dependencies_list;
 
         dependencies_list["Fusion\\Components\\Gate\\Route\\Context"] = def_route_context();
         dependencies_list["Fusion\\Http\\Request"] = def_request();

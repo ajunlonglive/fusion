@@ -34,6 +34,7 @@ extern "C" {
         Php::Class<RouteOptions>    routeoptions("Components\\Gate\\Route\\Method\\Options");
         Php::Class<RouteRedirect>   routeredirect("Components\\Gate\\Route\\Method\\Redirect");
         Php::Class<RouteAny>        routeany("Components\\Gate\\Route\\Method\\Any");
+        Php::Class<RouteMethod>        routemethod("Components\\Gate\\Route\\Method\\Method");
 
         Php::Class<Constra>         constra("Views\\Constra");
         
@@ -69,6 +70,7 @@ extern "C" {
         route.method<&Route::Options>("Options", {});
         route.method<&Route::Redirect>("Redirect", {});
         route.method<&Route::Any>("Any", {});
+        route.method<&Route::Method>("Method", {});
 
         routecontext.method<&RouteContext::code_501>("code_501", {});
 
@@ -92,6 +94,7 @@ extern "C" {
         fusion.add(std::move(routeoptions));
         fusion.add(std::move(routeredirect));
         fusion.add(std::move(routeany));
+        fusion.add(std::move(routemethod));
 
         fusion.add(std::move(controller));
         fusion.add(std::move(request));

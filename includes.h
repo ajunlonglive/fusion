@@ -31,6 +31,7 @@
 #include <components/gate/route/method/options.hpp>
 #include <components/gate/route/method/redirect.hpp>
 #include <components/gate/route/method/any.hpp>
+#include <components/gate/route/method/method.hpp>
 
 #include <views/constra/constra.hpp>
 #include <cores/container/container.hpp>

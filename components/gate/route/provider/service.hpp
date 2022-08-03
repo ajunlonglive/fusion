@@ -71,7 +71,8 @@ namespace RouteService {
                 request_method == "PUT"   ||
                 request_method == "PATCH" ||
                 request_method == "DELETE" ||
-                request_method == "ANY"
+                request_method == "ANY" ||
+                request_method == "METHOD"
             ) {
 
                 // 1. Router handler with Dependencies Injection

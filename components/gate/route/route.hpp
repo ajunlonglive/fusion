@@ -18,6 +18,7 @@
 #include <components/gate/route/method/options.hpp>
 #include <components/gate/route/method/redirect.hpp>
 #include <components/gate/route/method/any.hpp>
+#include <components/gate/route/method/method.hpp>
 
 
 class Route : public Php::Base {
@@ -88,5 +89,12 @@ class Route : public Php::Base {
 
         RouteAny *routeany = new RouteAny(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Any", routeany);
+    }
+
+    public: Php::Value static Method(Php::Parameters &param) {
+        Route __construct;
+
+        RouteMethod *routemethod = new RouteMethod(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Method", routemethod);
     }
 };

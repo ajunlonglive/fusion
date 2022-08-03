@@ -103,5 +103,10 @@ namespace Error {
         public: void static match_uri_identics() {
             error("'match_uri_identics' detected");
         }
+
+
+        public: void static constra_too_much_arguments() {
+            error("too much arguments for Constra");
+        }
     };
 }
