@@ -24,12 +24,12 @@
 class Route : public Php::Base {
     public: Route() {
         Construct::framework();
+
+        
     }
 
     public: Php::Value static Get(Php::Parameters &param) {
         Route __construct;
-
-        // Php::out << " ini ada router nya bos #1 -- " << std::flush;
 
         RouteGet *routeget = new RouteGet(param);
         return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Get", routeget);

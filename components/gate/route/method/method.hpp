@@ -14,6 +14,7 @@
 #include <vector>
 #include <functional>
 
+
 class RouteMethod : public Php::Base {
 
     // constructor
@@ -28,10 +29,12 @@ class RouteMethod : public Php::Base {
 
         bool is_method_valid = false;
         for(auto &each_method : (Php::Value)param[0]) {
+            
+            //
             std::string method_temp = (const char *) each_method.second;
             std::transform(method_temp.begin(), method_temp.end(), method_temp.begin(), ::toupper);
 
-
+            // 
             if(request_method == method_temp) {
                 // Override request method in database, for trigger the actually requested method
                 override_request_method(request_method);
