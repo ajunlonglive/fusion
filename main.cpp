@@ -21,20 +21,19 @@ extern "C" {
         Php::Class<Engine>          engine("Cores\\Engine");
         Php::Class<Autoload>        autoload("Cores\\Autoload");
         Php::Class<Route>           route("Components\\Gate\\Route");
-        Php::Class<RouteContext>    routecontext("Components\\Gate\\Route\\Context");
+        Php::Class<RouteContext>    route_context("Components\\Gate\\Route\\Context");
         Php::Class<Controller>      controller("Controllers\\Controller");
         
         Php::Class<Request>         request("Http\\Request");
-        Php::Class<RouteGet>        routeget("Components\\Gate\\Route\\Method\\Get");
-        Php::Class<RoutePost>       routepost("Components\\Gate\\Route\\Method\\Post");
-        Php::Class<RouteHead>       routehead("Components\\Gate\\Route\\Method\\Head");
-        Php::Class<RoutePut>        routeput("Components\\Gate\\Route\\Method\\Put");
-        Php::Class<RoutePatch>      routepatch("Components\\Gate\\Route\\Method\\Patch");
-        Php::Class<RouteDelete>     routedelete("Components\\Gate\\Route\\Method\\Delete");
-        Php::Class<RouteOptions>    routeoptions("Components\\Gate\\Route\\Method\\Options");
-        Php::Class<RouteRedirect>   routeredirect("Components\\Gate\\Route\\Method\\Redirect");
-        Php::Class<RouteAny>        routeany("Components\\Gate\\Route\\Method\\Any");
-        Php::Class<RouteMethod>        routemethod("Components\\Gate\\Route\\Method\\Method");
+        Php::Class<RouteGet>        route_get("Components\\Gate\\Route\\Method\\Get");
+        Php::Class<RoutePost>       route_post("Components\\Gate\\Route\\Method\\Post");
+        Php::Class<RouteHead>       route_head("Components\\Gate\\Route\\Method\\Head");
+        Php::Class<RoutePut>        route_put("Components\\Gate\\Route\\Method\\Put");
+        Php::Class<RoutePatch>      route_patch("Components\\Gate\\Route\\Method\\Patch");
+        Php::Class<RouteOptions>    route_options("Components\\Gate\\Route\\Method\\Options");
+        Php::Class<RouteRedirect>   route_redirect("Components\\Gate\\Route\\Method\\Redirect");
+        Php::Class<RouteAny>        route_any("Components\\Gate\\Route\\Method\\Any");
+        Php::Class<RouteMethod>     route_method("Components\\Gate\\Route\\Method\\Method");
 
         Php::Class<Constra>         constra("Views\\Constra");
         
@@ -61,18 +60,17 @@ extern "C" {
         autoload.method<&Autoload::Config>("Config", {});
         autoload.method<&Autoload::Register>("Register", {});
 
-        route.method<&Route::Get>("Get", {});
-        route.method<&Route::Post>("Post", {});
-        route.method<&Route::Head>("Head", {});
-        route.method<&Route::Put>("Put", {});
-        route.method<&Route::Patch>("Patch", {});
-        route.method<&Route::Delete>("Delete", {});
-        route.method<&Route::Options>("Options", {});
-        route.method<&Route::Redirect>("Redirect", {});
-        route.method<&Route::Any>("Any", {});
-        route.method<&Route::Method>("Method", {});
+        route.method<&Route::get>("Get", {});
+        route.method<&Route::post>("Post", {});
+        route.method<&Route::head>("Head", {});
+        route.method<&Route::put>("Put", {});
+        route.method<&Route::patch>("Patch", {});
+        route.method<&Route::options>("Options", {});
+        route.method<&Route::redirect>("Redirect", {});
+        route.method<&Route::any>("Any", {});
+        route.method<&Route::method>("Method", {});
 
-        routecontext.method<&RouteContext::code_501>("code_501", {});
+        route_context.method<&RouteContext::code_501>("code_501", {});
 
         controller.method<&Controller::Class>("Class", {});
         
@@ -83,18 +81,17 @@ extern "C" {
         fusion.add(std::move(engine));
         fusion.add(std::move(autoload));
         fusion.add(std::move(route));
-        fusion.add(std::move(routecontext));
+        fusion.add(std::move(route_context));
 
-        fusion.add(std::move(routeget));
-        fusion.add(std::move(routepost));
-        fusion.add(std::move(routehead));
-        fusion.add(std::move(routeput));
-        fusion.add(std::move(routepatch));
-        fusion.add(std::move(routedelete));
-        fusion.add(std::move(routeoptions));
-        fusion.add(std::move(routeredirect));
-        fusion.add(std::move(routeany));
-        fusion.add(std::move(routemethod));
+        fusion.add(std::move(route_get));
+        fusion.add(std::move(route_post));
+        fusion.add(std::move(route_head));
+        fusion.add(std::move(route_put));
+        fusion.add(std::move(route_patch));
+        fusion.add(std::move(route_options));
+        fusion.add(std::move(route_redirect));
+        fusion.add(std::move(route_any));
+        fusion.add(std::move(route_method));
 
         fusion.add(std::move(controller));
         fusion.add(std::move(request));

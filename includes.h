@@ -27,7 +27,6 @@
 #include <components/gate/route/method/head.hpp>
 #include <components/gate/route/method/put.hpp>
 #include <components/gate/route/method/patch.hpp>
-#include <components/gate/route/method/delete.hpp>
 #include <components/gate/route/method/options.hpp>
 #include <components/gate/route/method/redirect.hpp>
 #include <components/gate/route/method/any.hpp>
