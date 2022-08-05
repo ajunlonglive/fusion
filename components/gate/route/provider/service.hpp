@@ -55,7 +55,7 @@ namespace RouteService {
              * 
              */
             if(request_method == "REDIRECT") {
-                Php::eval("header('Location: "+(std::string)handler_opt+"');");
+                Php::eval("header('Location: " +(std::string)handler_opt+ "');");
                 return 0;
             }
             

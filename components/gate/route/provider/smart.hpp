@@ -112,7 +112,6 @@ class SmartRouter : public Php::Base {
      * 
      * @return void()
      */
-
     public: void static catch_uri_parse(std::string uri_route) {
         Php::Value FS_Uri_RCC = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});
         FS_Uri_RCC[uri_route] = uri_route_split(uri_route, true);   
