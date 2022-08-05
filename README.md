@@ -12,4 +12,4 @@ For now, it's still in the prototype stage. But you can see full documentation a
 - Container Service (for DI)*<br />
 </h4>
 
-<h5>* Current version is <i>alpha-prototype</i>.
+<h5>* Current version is <i>alpha-prototype</i> and unoptimized.
