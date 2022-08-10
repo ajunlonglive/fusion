@@ -81,7 +81,7 @@ class SmartRouter : public Php::Base {
         uri_route = uri_route.substr(1, uri_route.length() - 2);
         
 
-        replaceAll(uri_route, "$fs_bs$", "\\");
+        // replaceAll(uri_route, "$fs_bs$", "\\");
 
         /**
          * split uri_route as splitted by delim "/"
@@ -253,47 +253,67 @@ class SmartRouter : public Php::Base {
     }
 
     public: bool static handle_input_uri_guard(std::string uri_route) {
+        bool result = false;
+        const char *filtered_uri_route = uri_route.c_str();
+
         std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
-
-        std::vector<std::string> split_request_uri = uri_route_split(request_uri, false);
-
-        std::vector<std::string> split_uri_route = uri_route_split(uri_route, false);
         
-        int orig_length_uri = split_request_uri.size();
-        int patt_length_uri = split_uri_route.size();
-        int match_length_uri = 0;
-        int iterate = 0;
+        // regexp::replace("\\:(.*?)\\:\\:\\(|\\)(?=\\/)|\\)$", uri_route.c_str(), "", [&](const char *replaced) {
+        // regexp::replace("(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\((?<isi>.*?)\\))", uri_route.c_str(), "${regex:+${isi}}${non:+.*}", [&](const char *replaced) {
+        regexp::replace("(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${non:+.*}${regex:+}${close:+}", [&](const char *replaced) {
+            Php::out << uri_route << std::flush;
+            filtered_uri_route = replaced;
+        });
 
-        if(orig_length_uri != patt_length_uri)
-            return false;
+        regexp::match(filtered_uri_route, request_uri.c_str(), [&](const char *matched) {
+            result = true;
+        });
 
-        for(auto &uri_r : split_uri_route) {
-            regexp::match("^(?!:)[\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\@]*$", uri_r.c_str(), [&](const char * matched) {
-                if(uri_r == split_request_uri[iterate]) {
-                    match_length_uri++;
-                }
-            });
-
-            regexp::match("^\\:[\\w+_-]*$", uri_r.c_str(), [&](const char * matched) {
-                    match_length_uri++;
-            });
-
-            regexp::match("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$", uri_r.c_str(), [&](const char * matched) {
-                regexp::match("(?<=\\:\\:\\().*?(?=\\))", matched, [&](const char * matched2) {
-                    regexp::match(matched2, split_request_uri[iterate].c_str(), [&](const char * matched3) {
-                        match_length_uri++;
-                    });
-                });
-            });
-
-            iterate++;
-        }
-
-        if(orig_length_uri == match_length_uri)
-            return true;
-        else
-            return false;
+        return result;
     }
+
+    // public: bool static handle_input_uri_guard(std::string uri_route) {
+    //     std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
+
+    //     std::vector<std::string> split_request_uri = uri_route_split(request_uri, false);
+
+    //     std::vector<std::string> split_uri_route = uri_route_split(uri_route, false);
+        
+    //     int orig_length_uri = split_request_uri.size();
+    //     int patt_length_uri = split_uri_route.size();
+    //     int match_length_uri = 0;
+    //     int iterate = 0;
+
+    //     if(orig_length_uri != patt_length_uri)
+    //         return false;
+
+    //     for(auto &uri_r : split_uri_route) {
+    //         regexp::match("^(?!:)[\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\@]*$", uri_r.c_str(), [&](const char * matched) {
+    //             if(uri_r == split_request_uri[iterate]) {
+    //                 match_length_uri++;
+    //             }
+    //         });
+
+    //         regexp::match("^\\:[\\w+_-]*$", uri_r.c_str(), [&](const char * matched) {
+    //                 match_length_uri++;
+    //         });
+
+    //         regexp::match("^\\:[\\w+_-]*\\:\\:\\(.*?\\)$", uri_r.c_str(), [&](const char * matched) {
+    //             regexp::match("(?<=\\:\\:\\().*?(?=\\))", matched, [&](const char * matched2) {
+    //                 regexp::match(matched2, split_request_uri[iterate].c_str(), [&](const char * matched3) {
+    //                     match_length_uri++;
+    //                 });
+    //             });
+    //         });
+
+    //         iterate++;
+    //     }
+
+    //     if(orig_length_uri == match_length_uri)
+    //         return true;
+    //     else
+    //         return false;
+    // }
 
     /**
      * @brief a god/main function, used for running flow a SmartRoute idiomatic.

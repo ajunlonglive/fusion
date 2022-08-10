@@ -39,9 +39,10 @@ class RouteGet : public Php::Base {
         std::string escape_uri_route = Regex::uri::escape_request_uri(uri_router + "/");
 
         RouteService::web::push(escape_uri_route);
+        // Php::out << escape_uri_route << " - first<br />" << std::flush;
+        // SmartRouter::catch_uri_parse(escape_uri_route);                    
+        // Php::out << escape_uri_route << " - second<br />" << std::flush;
 
-        SmartRouter::catch_uri_parse(escape_uri_route);                    
-        
         if(!Database::get::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"})) {
             std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
 
