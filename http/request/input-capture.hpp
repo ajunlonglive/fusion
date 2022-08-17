@@ -29,29 +29,29 @@ class InputCapture : public Php::Base {
     }
 
     public: Php::Value static parse_input_capturable(std::string uri_subject, std::string uri_route) {
-        std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
-        std::vector<std::string> split_request_uri = SmartRouter::uri_route_split(request_uri, false);
-        std::vector<std::string> split_uri_route = SmartRouter::uri_route_split(uri_route, false);
+        // std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
+        // std::vector<std::string> split_request_uri = SmartRouter::uri_route_split(request_uri, false);
+        // std::vector<std::string> split_uri_route = SmartRouter::uri_route_split(uri_route, false);
         
         Php::Value match_grouping;
 
-        int iterate = 0;
+        // int iterate = 0;
 
-        for(auto &uri_r : split_uri_route) {
-            regexp::match("(?<=^\\:)[\\w+_-]*$", uri_r.c_str(), [&](const char * matched) {
-                match_grouping[matched] = split_request_uri[iterate];
-            });
+        // for(auto &uri_r : split_uri_route) {
+        //     regexp::match("(?<=^\\:)[\\w+_-]*$", uri_r.c_str(), [&](const char * matched) {
+        //         match_grouping[matched] = split_request_uri[iterate];
+        //     });
 
-            regexp::match("(?<=^\\:)[\\w+_-]*(?=\\:\\:\\(.*?\\)$)", uri_r.c_str(), [&](const char * uname) {
-                regexp::match("(?<=\\:\\:\\().*?(?=\\))", uri_r.c_str(), [&](const char * matched2) {
-                    regexp::match(matched2, split_request_uri[iterate].c_str(), [&](const char * matched3) {
-                        match_grouping[uname] = matched3;
-                    });
-                });
-            });
+        //     regexp::match("(?<=^\\:)[\\w+_-]*(?=\\:\\:\\(.*?\\)$)", uri_r.c_str(), [&](const char * uname) {
+        //         regexp::match("(?<=\\:\\:\\().*?(?=\\))", uri_r.c_str(), [&](const char * matched2) {
+        //             regexp::match(matched2, split_request_uri[iterate].c_str(), [&](const char * matched3) {
+        //                 match_grouping[uname] = matched3;
+        //             });
+        //         });
+        //     });
 
-            iterate++;
-        }
+        //     iterate++;
+        // }
 
         return match_grouping;
     }

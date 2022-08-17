@@ -35,25 +35,20 @@ class RouteGet : public Php::Base {
         }
     }   
 
-    public: void assign_to_route_service(std::string uri_router, Php::Value handler_opt) {
-        std::string escape_uri_route = Regex::uri::escape_request_uri(uri_router + "/");
+    public: void assign_to_route_service(std::string uri_route, Php::Value handler_opt) {
+        std::string escape_uri_route = Regex::uri::escape_request_uri(uri_route + "/");
+        std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
 
         RouteService::web::push(escape_uri_route);
-        // Php::out << escape_uri_route << " - first<br />" << std::flush;
-        // SmartRouter::catch_uri_parse(escape_uri_route);                    
-        // Php::out << escape_uri_route << " - second<br />" << std::flush;
+        SmartRouter::regist(escape_uri_route);
 
-        if(!Database::get::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"})) {
-            std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
+        //The gate for check if current $_SERVER["REQUEST_URI"] request same as user route address
+        if(uri_route == request_uri || SmartRouter::validate(uri_route, request_uri)) {
+            // Change GET_METHOD parameter to "true" for tell to Router Service, if routing request method given
+            Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "false");
 
-            //The gate for check if current $_SERVER["REQUEST_URI"] request same as user route address
-            if(SmartRouter::handle_input_uri_guard(escape_uri_route) || uri_router == request_uri) {
-                // Change GET_METHOD parameter to "true" for tell to Router Service, if routing request method given
-                Database::set::string({"FUSION_STORE", "FS_ROUTE", "GET_METHOD", "is_null"}, "false");
-
-                // Assign request context to Router Services
-                RouteService::web::assign(escape_uri_route, handler_opt, "GET");
-            }
+            // Assign request context to Router Services
+            RouteService::web::assign(escape_uri_route, handler_opt, "GET");
         }
     }
 };

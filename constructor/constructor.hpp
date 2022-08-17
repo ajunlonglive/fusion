@@ -26,8 +26,8 @@ namespace Construct {
 
         Database::set::array({"FUSION_STORE"}, FUSION_DB);
 
-        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
-        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Req_Uri_Split"});
+        // Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
+        // Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Req_Uri_Split"});
     }
     
     void route_init() {
@@ -46,12 +46,15 @@ namespace Construct {
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "OPTIONS_METHOD", "is_null"}, "true");
 
+        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
+        Database::set::empty_array({"FUSION_STORE" "FS_ROUTE", "FS_Web_Route_Identics_List"});
+        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"});
 
-        Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
+        // Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
 
-        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});    
+        // Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Uri_Route_Char_Count"});    
 
-        Php::Value request_uri_split = SmartRouter::uri_route_split(escape_request_uri, false);
-        Database::set::push_array_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Req_Uri_Split"}, request_uri_split);
+        // Php::Value request_uri_split = SmartRouter::uri_route_split(escape_request_uri, false);
+        // Database::set::push_array_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Req_Uri_Split"}, request_uri_split);
     }
 }

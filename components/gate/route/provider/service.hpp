@@ -29,7 +29,7 @@ namespace RouteService {
          */
         public: void static push(std::string uri_route) {
             // Default guard for checking double uri_route if more then one
-            SmartRouter::v_double(uri_route);
+            // SmartRouter::v_double(uri_route);
             // Push uri_route string to SESSION storage
             Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"}, uri_route);
         }
