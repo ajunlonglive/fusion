@@ -22,8 +22,8 @@
 
 class Route : public Php::Base {
     public: Route() {
+        
         Construct::framework();
-
         
     }
 

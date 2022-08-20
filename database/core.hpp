@@ -58,7 +58,7 @@ namespace Database {
                 merge_array_index += "['" +index+ "']";
             }   
             
-            Php::eval("$_SESSION" +merge_array_index+ "[] = '" +value+ "';");
+            Php::eval("$_SESSION" +merge_array_index+ "[] = \"" +value+ "\";");
         }
 
         public: void static push_array_int(std::vector<std::string> array_index, std::string value) {

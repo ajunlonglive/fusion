@@ -22,7 +22,7 @@ class Destruct : public Php::Base {
         SmartRouter::run();
 
         // if router can't find any double/twice router grouping, reset data parameter
-        SmartRouter::reset_v_double();
+        // SmartRouter::reset_v_double();
 
         /**
          * @brief Running second procedural for security purpose,
@@ -36,6 +36,7 @@ class Destruct : public Php::Base {
 
         // reset FS_Web_Route_list again for running procedure again
         RouteService::web::reset_route_list(); // reset web route list
+        SmartRouter::permist_step_mode();
 
         // run again for trigger a routing grouping
         loader::route();

@@ -47,8 +47,9 @@ namespace Construct {
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "OPTIONS_METHOD", "is_null"}, "true");
 
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
-        Database::set::empty_array({"FUSION_STORE" "FS_ROUTE", "FS_Web_Route_Identics_List"});
+        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_List"});
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"});
+        Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"}, false);
 
         // Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
 

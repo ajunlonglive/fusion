@@ -104,6 +104,9 @@ namespace Error {
             error("'match_uri_identics' detected");
         }
 
+        public: void static param_uri_identics() {
+            error("'param_uri_identics' detected");
+        }
 
         public: void static constra_too_much_arguments() {
             error("too much arguments for Constra");
