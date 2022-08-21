@@ -2,6 +2,7 @@
 
 #include <phpcpp.h>
 #include <database/core.hpp>
+#include <database/redis.hpp>
 #include <error/message.hpp>
 #include <regex/route.hpp>
 #include <components/gate/route/provider/smart.hpp>
@@ -34,7 +35,9 @@ namespace Construct {
         std::string request_uri = Php::eval("return $_SERVER['REQUEST_URI'];").stringValue();       
 
         std::string escape_request_uri = Regex::uri::escape_request_uri(request_uri);
+
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}, escape_request_uri); 
+        RedisDb::set::string("FUSION_STORE/FS_ROUTE/FS_REQUEST_URI", escape_request_uri);
 
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"}, Php::eval("return $_SERVER['REQUEST_METHOD'];").stringValue());
 
@@ -46,10 +49,15 @@ namespace Construct {
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "OPTIONS_METHOD", "is_null"}, "true");
 
-        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
-        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_List"});
+        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"});
+        Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"});
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"}, false);
+
+        
+        // RedisDb::set::push_array("FUSION_STORE/FS_ROUTE/FS_Web_Route_Identics_Param", {""});
+        // RedisDb::set::push_array_field("FUSION_STORE/FS_ROUTE/FS_Web_Route_Identics_List", "null", "null");
+        // RedisDb::set::string("FUSION_STORE/FS_ROUTE/Permist_Step", "false");
 
         // Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "FS_Route_V_Double"}, true);
 

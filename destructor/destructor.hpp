@@ -2,6 +2,7 @@
 
 #include <phpcpp.h>
 #include <database/core.hpp>
+#include <database/redis.hpp>
 #include <cores/autoload/loader.hpp>
 #include <components/gate/route/provider/service.hpp>
 #include <components/gate/route/provider/smart.hpp>
@@ -41,6 +42,8 @@ class Destruct : public Php::Base {
         // run again for trigger a routing grouping
         loader::route();
         RouteService::web::flush();
+
+        // RedisDb::flushall();
     }
 
     public: void static session_reset() {

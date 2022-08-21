@@ -88,9 +88,9 @@ LINKER				=	g++
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 mkfile_dir  := $(dir $(mkfile_path))
 
-COMPILER_FLAGS		=	-Wall -c -O2 -std=c++17 -I/${mkfile_dir} -I//usr/lib/x86_64-linux-gnu/ -fpic -o
+COMPILER_FLAGS		=	-Wall -c -O2 -std=c++17 -I/${mkfile_dir} -I//usr/lib/x86_64-linux-gnu/ -pthread -fpic -o
 LINKER_FLAGS		=	-shared
-LINKER_DEPENDENCIES	=	-lphpcpp
+LINKER_DEPENDENCIES	=	-lphpcpp /usr/local/lib/libredis++.a /usr/local/lib/libhiredis.a
 
 
 #

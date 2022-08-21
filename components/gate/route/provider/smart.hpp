@@ -3,6 +3,7 @@
 #include <phpcpp.h>
 
 #include <database/core.hpp>
+#include <database/redis.hpp>
 #include <regex/wrapper/pcre2.hpp> 
 #include <error/message.hpp>      
 #include <utils/string.hpp>
@@ -29,21 +30,25 @@ class SmartRouter : public Php::Base {
             Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"}, true);
     }
 
-    public: void static regist(std::string uri_route, bool permist_step) {
+    public: bool static regist(std::string uri_route, bool permist_step) {
         if(!permist_step) {
-            Php::Value double_v_check = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_List"});
+            Php::Value double_v_check = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
+
             if(double_v_check[uri_route])
                 Error::message::v_double_uri();
 
             const char *result = uri_route.c_str();
+            
             // regexp::replace("(?<norm>(?<=\\/)[\\w+\\-\\_]*(?=\\/))|(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${norm:+[\\\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@]*}${non:+[\\\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@]*}${regex:+}${close:+}", [&](const char *replaced) {
             // regexp::replace("(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${non:+[\\\\w+\\\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@]*}${regex:+}${close:+}", [&](const char *replaced) {
             regexp::replace("(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${non:+[\\\\w+\\\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@\\\\[\\\\]]*}${regex:+}${close:+}", [&](const char *replaced) {
                 result = replaced;
             }); 
 
-            Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_List", uri_route}, (std::string)result);  
+            Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists", uri_route}, (std::string)result);  
         }
+
+        return permist_step;
     }
 
     public: bool static validate(std::string filt_uri_route, std::string orig_uri_route, std::string request_uri) {
@@ -71,7 +76,7 @@ class SmartRouter : public Php::Base {
             Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"}, filtered_uri_route);
             result = true;
         });
-
+        
         return result;
     }
 
@@ -80,10 +85,10 @@ class SmartRouter : public Php::Base {
      */
     public: void static run() {
         boot([&](){
-            Php::Value filtered_identics_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_List"});
+            Php::Value filtered_identics_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
 
-            for(auto &root : filtered_identics_list) {
-                for(auto &pair : filtered_identics_list) {
+            for(auto& root : filtered_identics_list) {
+                for(auto& pair : filtered_identics_list) {
                     
                     if(root.first == pair.first) continue;
 
@@ -99,7 +104,10 @@ class SmartRouter : public Php::Base {
                     }
                     
                 }
+
+                // Php::out << root.second << " INI NIH<br />" << std::flush;
             }
+
         });
     }
 };
