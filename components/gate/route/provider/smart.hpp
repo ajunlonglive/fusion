@@ -39,8 +39,6 @@ class SmartRouter : public Php::Base {
 
             const char *result = uri_route.c_str();
             
-            // regexp::replace("(?<norm>(?<=\\/)[\\w+\\-\\_]*(?=\\/))|(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${norm:+[\\\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@]*}${non:+[\\\\w+\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@]*}${regex:+}${close:+}", [&](const char *replaced) {
-            // regexp::replace("(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${non:+[\\\\w+\\\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@]*}${regex:+}${close:+}", [&](const char *replaced) {
             regexp::replace("(?<non>(?<=\\/)\\:(?!\\:).*?(?=\\/))|(?<regex>\\:\\:.*?\\()|(?<close>\\)(?=\\/))", uri_route.c_str(), "${non:+[\\\\w+\\\\-\\:\\.\\_\\~\\!\\$\\&\\\\'\\(\\)\\*\\+\\\\,\\;\\=\\:\\@\\\\[\\\\]]*}${regex:+}${close:+}", [&](const char *replaced) {
                 result = replaced;
             }); 
@@ -56,20 +54,20 @@ class SmartRouter : public Php::Base {
         std::string prefix = "^" + filt_uri_route + "$";
         const char *filtered_uri_route = prefix.c_str();
 
-        // Step for indentification same/indentics param placeholder
-        orig_uri_route = orig_uri_route.substr(1, orig_uri_route.length() - 2);
-        std::vector<std::string> orig_uri_route_split = utils::str_split("/", orig_uri_route);
-        std::vector<std::string> parsed_uri;
+        // // Step for indentification same/indentics param placeholder
+        // orig_uri_route = orig_uri_route.substr(1, orig_uri_route.length() - 2);
+        // std::vector<std::string> orig_uri_route_split = utils::str_split("/", orig_uri_route);
+        // std::vector<std::string> parsed_uri;
 
-        for(auto &orig_per : orig_uri_route_split) {
-            regexp::match("(?<=^\\:\\:)[\\w+_-]*(?=\\()|(?<=^\\:)[\\w+_-]*$", orig_per.c_str(), [&](const char *matched) {
-                parsed_uri.push_back((std::string)matched);
-            });
-        }
+        // for(auto &orig_per : orig_uri_route_split) {
+        //     regexp::match("(?<=^\\:\\:)[\\w+_-]*(?=\\()|(?<=^\\:)[\\w+_-]*$", orig_per.c_str(), [&](const char *matched) {
+        //         parsed_uri.push_back((std::string)matched);
+        //     });
+        // }
 
-        if(std::adjacent_find(parsed_uri.begin(), parsed_uri.end()) != parsed_uri.end()) {
-            Error::message::param_uri_identics();
-        }
+        // if(std::adjacent_find(parsed_uri.begin(), parsed_uri.end()) != parsed_uri.end()) {
+        //     Error::message::param_uri_identics();
+        // }
 
         // Match the uri decorator
         regexp::match(filtered_uri_route, request_uri.c_str(), [&](const char *matched) {
@@ -85,8 +83,8 @@ class SmartRouter : public Php::Base {
      */
     public: void static run() {
         boot([&](){
-            Php::Value filtered_identics_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
 
+            Php::Value filtered_identics_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
             for(auto& root : filtered_identics_list) {
                 for(auto& pair : filtered_identics_list) {
                     
@@ -102,10 +100,23 @@ class SmartRouter : public Php::Base {
                     } else {
                         Error::message::match_uri_identics();
                     }
-                    
-                }
 
-                // Php::out << root.second << " INI NIH<br />" << std::flush;
+                    // Step for indentification same/indentics param placeholder
+                    std::string orig_uri_route = root.first;
+                    std::vector<std::string> orig_uri_route_split = utils::str_split("/", orig_uri_route.substr(1, orig_uri_route.length() - 2) );
+                    std::vector<std::string> parsed_uri;
+
+                    for(auto &orig_per : orig_uri_route_split) {
+                        regexp::match("(?<=^\\:\\:)[\\w+_-]*(?=\\()|(?<=^\\:)[\\w+_-]*$", orig_per.c_str(), [&](const char *matched) {
+                            parsed_uri.push_back((std::string)matched);
+                        });
+                    }
+
+                    if(std::adjacent_find(parsed_uri.begin(), parsed_uri.end()) != parsed_uri.end()) {
+                        Error::message::param_uri_identics();
+                    }
+                                        
+                }
             }
 
         });
