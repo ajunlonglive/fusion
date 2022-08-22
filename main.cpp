@@ -14,7 +14,7 @@ extern "C" {
      */
     PHPCPP_EXPORT void *get_module() 
     {
-        static Php::Extension extension("fusion", "1.0");
+        static Php::Extension extension("FusionEngine", "1.0");
 
         Php::Namespace fusion("Fusion");
 
@@ -36,23 +36,13 @@ extern "C" {
         Php::Class<RouteMethod>     route_method("Components\\Gate\\Route\\Method\\Method");
 
         Php::Class<Constra>         constra("Views\\Constra");
-        
+
         constra.method<&Constra::__construct>("__construct", {});
         constra.method<&Constra::__destruct>("__destruct", {});
-
-        Php::Namespace unit("Components\\Gate\\Unit");
-        Php::Class<unit::foo> foo("foo");
-        Php::Class<unit::bar> bar("bar");
 
         // routeget.method<&RouteGet::test>("test", {});
 
         // constra.method<&Constra::test>("test", {});
-
-        foo.method<&unit::foo::foo_u>("foo_u", {});
-        bar.method<&unit::bar::bar_u>("bar_u", {});
-
-        unit.add(std::move(foo));
-        unit.add(std::move(bar));
 
         engine.method<&Engine::Framework>("Framework", {});
         engine.method<&Engine::Run>("Run", {});
@@ -71,12 +61,16 @@ extern "C" {
         route.method<&Route::method>("Method", {});
 
         route_context.method<&RouteContext::code_501>("code_501", {});
+        route_context.method<&RouteContext::uri>("uri", {});
+        route_context.method<&RouteContext::parse>("parse", {});
 
         controller.method<&Controller::Class>("Class", {});
         
         request.method<&Request::__construct>("__construct", {});
-        request.method<&Request::uri>("uri", {});
-        request.method<&Request::get>("get", {});
+        // request.method<&Request::parse>("parse", {});
+        request.method<&Request::url>("url", {});
+        request.method<&Request::path>("path", {});
+        request.method<&Request::full>("full", {});
 
         fusion.add(std::move(engine));
         fusion.add(std::move(autoload));
@@ -95,11 +89,13 @@ extern "C" {
 
         fusion.add(std::move(controller));
         fusion.add(std::move(request));
-        fusion.add(std::move(unit));
         fusion.add(std::move(constra));
 
         extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
+        
+        extension.add<cd>("cd");
+
 
         // wrapped namespace, add to extension
         extension.add(std::move(fusion));

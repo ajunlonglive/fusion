@@ -54,21 +54,6 @@ class SmartRouter : public Php::Base {
         std::string prefix = "^" + filt_uri_route + "$";
         const char *filtered_uri_route = prefix.c_str();
 
-        // // Step for indentification same/indentics param placeholder
-        // orig_uri_route = orig_uri_route.substr(1, orig_uri_route.length() - 2);
-        // std::vector<std::string> orig_uri_route_split = utils::str_split("/", orig_uri_route);
-        // std::vector<std::string> parsed_uri;
-
-        // for(auto &orig_per : orig_uri_route_split) {
-        //     regexp::match("(?<=^\\:\\:)[\\w+_-]*(?=\\()|(?<=^\\:)[\\w+_-]*$", orig_per.c_str(), [&](const char *matched) {
-        //         parsed_uri.push_back((std::string)matched);
-        //     });
-        // }
-
-        // if(std::adjacent_find(parsed_uri.begin(), parsed_uri.end()) != parsed_uri.end()) {
-        //     Error::message::param_uri_identics();
-        // }
-
         // Match the uri decorator
         regexp::match(filtered_uri_route, request_uri.c_str(), [&](const char *matched) {
             Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"}, filtered_uri_route);

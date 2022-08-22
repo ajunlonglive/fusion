@@ -111,5 +111,9 @@ namespace Error {
         public: void static constra_too_much_arguments() {
             error("too much arguments for Constra");
         }
+
+        public: void static request_url_need_accessor(std::string method_name) {
+            error("method " +method_name+ " need accessor before use it");
+        }
     };
 }

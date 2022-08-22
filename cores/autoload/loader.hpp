@@ -2,6 +2,8 @@
 #include <phpcpp.h>
 
 #include <database/core.hpp>
+#include <serfix/fileio.hpp>
+#include <serfix/parser.hpp>
 
 #include <string>
 #include <functional>
@@ -28,9 +30,19 @@ class loader : public Php::Base {
         std::string directory = p_directory;
         list_files(directory, [&](const std::string &path) {
             if(only_once) {
-                Php::require_once(path);
+                std::string source_code = serfix::fileio::read(path);
+                std::string replaced = serfix::parse::code(source_code);
+                std::string file_id = serfix::fileio::write(replaced);
+
+                Php::require_once("../storage/fusion/cache/serfix/" +file_id);
+                serfix::fileio::unlink("../storage/fusion/cache/serfix/" +file_id);
             } else {
-                Php::require(path);
+                std::string source_code = serfix::fileio::read(path);
+                std::string replaced = serfix::parse::code(source_code);
+                std::string file_id = serfix::fileio::write(replaced);
+
+                Php::require("../storage/fusion/cache/serfix/" +file_id);
+                serfix::fileio::unlink("../storage/fusion/cache/serfix/" +file_id);
             }
         });
     }
