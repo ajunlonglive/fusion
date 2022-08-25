@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+#define COMPARE_REQ_METHOD(set, req, method) set ? true : req == method ? true : false;
+
 namespace RouteService {
     class web : public Php::Base {
         
@@ -49,15 +51,10 @@ namespace RouteService {
          */
         public: void static assign(std::string uri_route, Php::Value handler_opt, std::string request_method) {
 
-            // Php::out << " ini ada router nya bos #KK6 -- " << std::flush;
             /**
              * @note Reserved method for Redirect
              * 
              */
-            if(request_method == "REDIRECT") {
-                Php::eval("header('Location: " +(std::string)handler_opt+ "');");
-                return void();
-            }
             
             Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
 
@@ -65,65 +62,92 @@ namespace RouteService {
              * @note Reserved method for Get, Post, Put, Patch, Delete
              * 
              */
-            if(
-                request_method == "GET"   || 
-                request_method == "POST"  ||
-                request_method == "PUT"   ||
-                request_method == "PATCH" ||
-                request_method == "DELETE" ||
-                request_method == "ANY" ||
-                request_method == "METHOD"
-            ) {
+            bool set_method = request_method == "REDIRECT" ? true : false;
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "GET");
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "POST");
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "PUT");
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "PATCH");
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "DELETE");
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "ANY");
+            set_method = COMPARE_REQ_METHOD(set_method, request_method, "METHOD");
 
-                // 1. Router handler with Dependencies Injection
+            if(set_method) {
+
+                // Redirect action, no need any inheritance
+                if(request_method == "REDIRECT") {
+                    // Call header function, do Location command for redirect to destination
+                    Php::eval("header('Location: " +(std::string)handler_opt+ "');");
+
+                    return void();
+                }
+
+                // Custom action controller, connected to DI Container
                 if(Php::is_array(handler_opt).boolValue()) {      
-                        
+                    // Init and cast user_controller_name to string class name
                     std::string user_controller_name = handler_opt[0];
-                    const char* user_method_name     = handler_opt[1];
+                    // Init and cast user_method_name to string method name
+                    std::string user_method_name     = handler_opt[1];
 
-                    if(Php::count(handler_opt) < 2)
+                    if(Php::count(handler_opt) < 1)
                         Error::message::handler_opt_empty_args();
 
                     if(Php::count(handler_opt) > 2)
                         Error::message::handler_opt_many_args();
 
-                    // 1. When __construct exists in user controller class, binding DI to constructor instead user_method_name
-                    if(Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
-                        // Import default dependencies lib for Dependency Injection
-                        std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, "__construct");
 
-                        Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
-                        Php::Value class_init = reflect_class.call("newInstanceArgs", args);
-                        class_init.call(user_method_name);
-                    }
+                    // Import default dependencies lib for Dependency Injection
+                    std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, user_method_name);
 
-                    // 2. When __construct not exists in user controller class, binding DI to user_method_name
-                    if(! (bool)Php::call("method_exists", user_controller_name, "__construct").boolValue()) {
-
-                        std::string user_controller_name = handler_opt[0];
-                        const char* user_method_name     = handler_opt[1];
-
-                        // Import default dependencies lib for Dependency Injection
-                        std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, user_method_name);
-
-                        Php::Value class_method;
-                        class_method[0] = Php::Object(user_controller_name.c_str());
-                        class_method[1] = user_method_name;
-                        Php::call("call_user_func_array", class_method, args);
-                    }
+                    // Declare class method for init object class
+                    Php::Value class_method;
+                    // Set class name first with initialized
+                    class_method[0] = Php::Object(user_controller_name.c_str());
+                    // Then set method name
+                    class_method[1] = user_method_name;
+                    
+                    // Call the method with injected dependencies
+                    Php::call("call_user_func_array", class_method, args);
 
                     return void();
                 }               
 
-                // 2. Router handler with callback action, injected (Object)Request, etc.. as param
+                // Single action controller, connected to DI Container
+                if(!Php::call("is_object", handler_opt).boolValue() && Php::call("class_exists", handler_opt).boolValue()) {
+                    // Init and cast handler_opt to string class name
+                    std::string user_controller_name = handler_opt;
+
+                    // Import default dependencies lib for Dependency Injection
+                    std::vector<Php::Value> args = Container::Loader::Method(user_controller_name, "__invoke");
+
+                    // Setup for DI to PHP __construct()
+                    // Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
+                    // Php::Value class_init = reflect_class.call("newInstanceArgs", args);
+
+                    // Declare class method for init object class
+                    Php::Value class_method;
+                    // Set class name first with initialized
+                    class_method[0] = Php::Object(user_controller_name.c_str());
+                    // Then set method name
+                    class_method[1] = "__invoke";
+                    
+                    // Call the method with injected dependencies
+                    Php::call("call_user_func_array", class_method, args);
+
+                    return void();
+                }
+
+                // Closure callback controller, connected to DI Container
                 if(Php::call("is_callable", handler_opt).boolValue()) {
                     // Import default dependencies lib for Dependency Injection
                     std::vector<Php::Value> args = Container::Loader::Function(handler_opt);
 
+                    // call the callback with injected dependencies
                     Php::call("call_user_func_array", handler_opt, args);
-                    
+
                     return void();
                 }
+
+                // Throw error exception for not given conditional arguments
 
             }
         }
@@ -152,7 +176,7 @@ namespace RouteService {
             if(put_method == "true" && request_method == "PUT")         error_page::Put::code_404();   
             if(patch_method == "true" && request_method == "PATCH")     error_page::Patch::code_404();   
             if(delete_method == "true" && request_method == "DELETE")   error_page::Delete::code_404();    
-            if(delete_method == "true" && request_method == "OPTIONS")   error_page::Delete::code_404();    
+            if(delete_method == "true" && request_method == "OPTIONS")  error_page::Delete::code_404();    
         }
 
         /**

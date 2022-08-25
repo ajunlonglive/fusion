@@ -2,13 +2,12 @@
 #include <iostream>
 #include <vector>
 
+void freturn() { 
+    std::cout << "hello" << std::endl;
+    std::cout << "world" << std::endl;
+}
+
 int main() {
-    std::string uri_route = "/test/";
-
-    uri_route = uri_route.substr(1, uri_route.length() - 2);
-
-
-    std::cout << uri_route << std::endl;
-
+    freturn();
     return 0;
 }

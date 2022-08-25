@@ -61,7 +61,6 @@ namespace Container {
             std::vector<Php::Value> depen_group;
             for(auto &p : get_param) {
                 Php::Value get_type = (p.second).call("getType");
-                Php::out << (std::string)get_type << std::flush;
                 depen_group.push_back(default_list( (std::string)get_type ));
             }
             // for(auto &param : dependencies) {
