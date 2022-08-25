@@ -40,12 +40,12 @@ class RouteHead : public Php::Base {
             Php::Value handler_opt = param[1];
 
             if(Php::is_array(uri_route).boolValue()) {
-                // Multi uri request e.g. Route::get(["/foo", "/bar"], function() {});
+                // Multi uri request e.g. Route::head(["/foo", "/bar"], function() {});
                 for(auto &uri_each : uri_route) {
                     assign_to_route_service((std::string)uri_each.second, handler_opt);
                 }
             } else {
-                // Single uri request e.g. Route::get("/foo", function() {});
+                // Single uri request e.g. Route::head("/foo", function() {});
                 assign_to_route_service(uri_route, handler_opt);
             }
         }

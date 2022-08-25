@@ -32,7 +32,7 @@ class RoutePost : public Php::Base {
         // !REQUEST_METHOD initialized coming from internal constructor Fusion
         std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
 
-        // If request_method was "GET"
+        // If request_method was "POST"
         if(request_method == "POST") {
             // Raw uri_route
             Php::Value uri_route = param[0];
@@ -41,12 +41,12 @@ class RoutePost : public Php::Base {
             Php::Value handler_opt = param[1];
 
             if(Php::is_array(uri_route).boolValue()) {
-                // Multi uri request e.g. Route::get(["/foo", "/bar"], function() {});
+                // Multi uri request e.g. Route::post(["/foo", "/bar"], function() {});
                 for(auto &uri_each : uri_route) {
                     assign_to_route_service((std::string)uri_each.second, handler_opt);
                 }
             } else {
-                // Single uri request e.g. Route::get("/foo", function() {});
+                // Single uri request e.g. Route::post("/foo", function() {});
                 assign_to_route_service(uri_route, handler_opt);
             }
         }

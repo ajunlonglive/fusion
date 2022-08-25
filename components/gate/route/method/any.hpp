@@ -27,10 +27,6 @@ class RouteAny : public Php::Base {
         if(param_count > 2)
             Error::message::many_route_get_param();
 
-        // Get request_method when user access the uri
-        // !REQUEST_METHOD initialized coming from internal constructor Fusion
-        std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
-
         // Raw uri_route
         Php::Value uri_route = param[0];
 
@@ -39,12 +35,12 @@ class RouteAny : public Php::Base {
         
         // Check if uri_route a single uri or multi uri request
         if(Php::is_array(uri_route).boolValue()) {
-            // Multi uri request e.g. Route::get(["/foo", "/bar"], function() {});
+            // Multi uri request e.g. Route::any(["/foo", "/bar"], function() {});
             for(auto &uri_each : uri_route) {
                 assign_to_route_service((std::string)uri_each.second, handler_opt);
             }
         } else {
-            // Single uri request e.g. Route::get("/foo", function() {});
+            // Single uri request e.g. Route::any("/foo", function() {});
             assign_to_route_service(uri_route, handler_opt);
         }
     }

@@ -35,12 +35,12 @@ class RouteRedirect : public Php::Base {
         Php::Value handler_opt = param[1];
 
         if(Php::is_array(uri_route).boolValue()) {
-            // Multi uri request e.g. Route::get(["/foo", "/bar"], function() {});
+            // Multi uri request e.g. Route::redirect(["/foo", "/bar"], "https://example.com");
             for(auto &uri_each : uri_route) {
                 assign_to_route_service((std::string)uri_each.second, handler_opt);
             }
         } else {
-            // Single uri request e.g. Route::get("/foo", function() {});
+            // Single uri request e.g. Route::redirect("/foo", "https://example.com");
             assign_to_route_service(uri_route, handler_opt);
         }
     }   
@@ -69,7 +69,7 @@ class RouteRedirect : public Php::Base {
         // permist_step used for blocking SmartRouter::validate
         // When secondstep SmartRouter running, permist step setted to true which is make SmartRouter::validate can run
         if(permist_step && SmartRouter::validate(parsed_uri_route_list[escape_uri_route], escape_uri_route, request_uri)) {
-            
+
             // Finally, assign uri_route, ptional handle, request method to RouteService
             RouteService::web::assign(escape_uri_route, handler_opt, "REDIRECT");
         }

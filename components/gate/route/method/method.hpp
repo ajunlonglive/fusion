@@ -37,18 +37,26 @@ class RouteMethod : public Php::Base {
         // !REQUEST_METHOD initialized coming from internal constructor Fusion
         std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});
 
+        // Set variable for parameter grouping method compare to current request method
         bool is_method_valid = false;
+        
+        // Iterate grouping method (first param) for each method
         for(auto &each_method : (Php::Value)param[0]) {
-            std::string method_temp = (const char *) each_method.second;
-            std::transform(method_temp.begin(), method_temp.end(), method_temp.begin(), ::toupper);
-            
-            if(method_temp == request_method) {
+            // Cast each method to string
+            std::string str_method = (const char *) each_method.second;
+            // Uppering all character from each method
+            std::transform(str_method.begin(), str_method.end(), str_method.begin(), ::toupper);
+
+            // Compare each method with current request method
+            if(str_method == request_method) {
+                // If compare was true, set is_method_valid to true
                 is_method_valid = true;
+                // Break the loop
                 break;
             }
         }
 
-        // If request_method was valid
+        // If grouping method had request_method
         if(is_method_valid) {
             // Raw uri_route
             Php::Value uri_route = param[1];
@@ -57,18 +65,19 @@ class RouteMethod : public Php::Base {
             Php::Value handler_opt = param[2];
 
             if(Php::is_array(uri_route).boolValue()) {
-                // Multi uri request e.g. Route::get(["/foo", "/bar"], function() {});
+                // Multi uri request e.g. Route::method(["get", "post"], ["/foo", "/bar"], function() {});
                 for(auto &uri_each : uri_route) {
                     assign_to_route_service((std::string)uri_each.second, handler_opt, request_method);
                 }
             } else {
-                // Single uri request e.g. Route::get("/foo", function() {});
+                // Single uri request e.g. Route::method(["get", "post"], "/foo", function() {});
                 assign_to_route_service(uri_route, handler_opt, request_method);
             }
         }
     }   
 
     public: void assign_to_route_service(std::string uri_route, Php::Value handler_opt, std::string request_method) {
+        // Predefine parsed_uri_route_list to use after second step SmartRouter running
         Php::Value parsed_uri_route_list;
 
         // Escaping uri_route for doubling slash convert to single slash
