@@ -47,7 +47,7 @@ namespace RouteService {
          * @return void()       A void return only for blocking return each state conditional (blocking return)
          * 
          */
-        public: Php::Value static assign(std::string uri_route, Php::Value handler_opt, std::string request_method) {
+        public: void static assign(std::string uri_route, Php::Value handler_opt, std::string request_method) {
 
             // Php::out << " ini ada router nya bos #KK6 -- " << std::flush;
             /**
@@ -56,7 +56,7 @@ namespace RouteService {
              */
             if(request_method == "REDIRECT") {
                 Php::eval("header('Location: " +(std::string)handler_opt+ "');");
-                return 0;
+                return void();
             }
             
             Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, uri_route);
@@ -112,7 +112,7 @@ namespace RouteService {
                         Php::call("call_user_func_array", class_method, args);
                     }
 
-                    return 0;
+                    return void();
                 }               
 
                 // 2. Router handler with callback action, injected (Object)Request, etc.. as param
@@ -121,13 +121,11 @@ namespace RouteService {
                     std::vector<Php::Value> args = Container::Loader::Function(handler_opt);
 
                     Php::call("call_user_func_array", handler_opt, args);
-                    return 0;
+                    
+                    return void();
                 }
 
-
             }
-
-            return 0;
         }
 
         /**
