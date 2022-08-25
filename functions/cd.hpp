@@ -17,6 +17,7 @@ std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index
     std::string buffer;
     std::string array_type;
     std::string spaceheader;
+
     if((nbsp_space == 0)) {
         spaceheader = "0";
     } else {
