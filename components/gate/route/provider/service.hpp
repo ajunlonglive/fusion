@@ -31,7 +31,7 @@ namespace RouteService {
             // Default guard for checking double uri_route if more then one
             // SmartRouter::v_double(uri_route);
             // Push uri_route string to SESSION storage
-            Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"}, uri_route);
+            Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"}, uri_route);
         }
 
         /**
@@ -163,7 +163,7 @@ namespace RouteService {
          * @return void()
          */
         public: void static reset_route_list() {
-            Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
+            Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"});
         }
 
     };

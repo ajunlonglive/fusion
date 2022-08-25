@@ -20,7 +20,7 @@ class SmartRouter : public Php::Base {
      * @brief for private method under SmartRouter class, used for utils/helper each worker method for each purpose
      */
     public: void static boot(std::function<void()> callback) {
-        Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
+        Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"});
         if(Php::count(web_route_list) > 0) {
             callback();
         }

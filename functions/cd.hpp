@@ -13,7 +13,7 @@ std::string str_repeat(std::string value, int notation) {
 }
 
 
-std::string array_parser(Php::Value array, int nbsp_space = 0) {
+std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index_name = "") {
     std::string buffer;
     std::string array_type;
     std::string spaceheader;
@@ -36,12 +36,13 @@ std::string array_parser(Php::Value array, int nbsp_space = 0) {
         if(array_type != "stdClass")
             buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>object(" +array_type+ ") (" +Php::count(array).stringValue()+ ")</span> {</summary>";
     } else {
-        buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>array(" +Php::count(array).stringValue()+ ")</span> (</summary>";
+        buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>array(" +Php::count(array).stringValue()+ ") [" +index_name+ "]</span> (</summary>";
     }
 
     for(auto &arrays : array) {
         if(Php::call("is_array", arrays.second).boolValue() || Php::call("is_object", arrays.second).boolValue()) {
-            buffer += array_parser(arrays.second, 30);
+            std::string index_name = arrays.first;
+            buffer += array_parser(arrays.second, 30, index_name);
         } else {
             buffer += "<span style=\"margin-left: 30px; \">[" +(std::string)arrays.first+ "] => " +(std::string)arrays.second+ "</span><br />";
         }
@@ -101,11 +102,11 @@ void cd(Php::Parameters &param) {
     }
     
     if(Php::call("is_string", main_data).boolValue()) {
-        Php::out << "<span style=\"background: #000000; color: yellow;\">(string) " << main_data << "</span>" << std::flush;
+        Php::out << "<span style=\"background: #000000; color: yellow;\">string (" +std::to_string(main_data.length())+ ") \"" << main_data << "\"</span>" << std::flush;
     }
 
     if(Php::call("is_int", main_data).boolValue()) {
-        Php::out << "<span style=\"background: #000000; color: yellow;\">(int) " << main_data << "</span>" << std::flush;
+        Php::out << "<span style=\"background: #000000; color: yellow;\">int (" << main_data << ")</span>" << std::flush;
     }
 
     if(Php::call("is_array", main_data).boolValue() || Php::call("is_object", main_data).boolValue()) {
