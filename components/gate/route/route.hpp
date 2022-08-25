@@ -22,71 +22,82 @@
 
 class Route : public Php::Base {
     public: Route() {
-        
+        // A Guard check if user really mean it for using Fusion framewok
+        // When true (mean used it) is return nothing and non-blocking
+        // But if false, is return internal PHP error exception and blocking
         Construct::framework();
-        
     }
 
+    // Return singleton context (a declared object) when user use "get" method
     public: Php::Value static get(Php::Parameters &param) {
         Route __construct;
 
-        RouteGet *routeget = new RouteGet(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Get", routeget);
+        RouteGet *route_get = new RouteGet(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Get", route_get);
     }
 
+    // Return singleton context (a declared object) when user use "post" method
     public: Php::Value static post(Php::Parameters &param) {
         Route __construct;
 
-        RoutePost *routepost = new RoutePost(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Post", routepost);
+        RoutePost *route_post = new RoutePost(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Post", route_post);
     }
   
+    // Return singleton context (a declared object) when user use "head" method
     public: Php::Value static head(Php::Parameters &param) {
         Route __construct;
 
-        RouteHead *routehead = new RouteHead(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Head", routehead);
+        RouteHead *route_head = new RouteHead(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Head", route_head);
     }
 
+    // Return singleton context (a declared object) when user use "put" method
     public: Php::Value static put(Php::Parameters &param) {
         Route __construct;
 
-        RoutePut *routeput = new RoutePut(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Put", routeput);
+        RoutePut *route_put = new RoutePut(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Put", route_put);
     }
 
+
+    // Return singleton context (a declared object) when user use "patch" method
     public: Php::Value static patch(Php::Parameters &param) {
         Route __construct;
 
-        RoutePatch *routepatch = new RoutePatch(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Patch", routepatch);
+        RoutePatch *route_patch = new RoutePatch(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Patch", route_patch);
     }
 
+    // Return singleton context (a declared object) when user use "options" method
     public: Php::Value static options(Php::Parameters &param) {
         Route __construct;
 
-        RouteOptions *routeoptions = new RouteOptions(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Options", routeoptions);
+        RouteOptions *route_options = new RouteOptions(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Options", route_options);
     }
     
+    // Return singleton context (a declared object) when user use "redirect" method
     public: Php::Value static redirect(Php::Parameters &param) {
         Route __construct;
 
-        RouteRedirect *routeredirect = new RouteRedirect(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Delete", routeredirect);
+        RouteRedirect *route_redirect = new RouteRedirect(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Redirect", route_redirect);
     }
 
+    // Return singleton context (a declared object) when user use "any" method
     public: Php::Value static any(Php::Parameters &param) {
         Route __construct;
 
-        RouteAny *routeany = new RouteAny(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Any", routeany);
+        RouteAny *route_any = new RouteAny(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Any", route_any);
     }
 
+    // Return singleton context (a declared object) when user use "method" method
     public: Php::Value static method(Php::Parameters &param) {
         Route __construct;
 
-        RouteMethod *routemethod = new RouteMethod(param);
-        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Method", routemethod);
+        RouteMethod *route_method = new RouteMethod(param);
+        return Php::Object("Fusion\\Components\\Gate\\Route\\Method\\Method", route_method);
     }
 };
