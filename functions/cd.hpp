@@ -31,7 +31,7 @@ std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index
     }
 
     if(!Php::is_array(array)) {
-        array = Php::call("get_object_vars", array);
+        array = Php::call("get_object_vars", array);    
         if(array_type == "stdClass")
             buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>object(stdClass) (" +Php::count(array).stringValue()+ ")</span> {</summary>";
         if(array_type != "stdClass")

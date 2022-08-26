@@ -13,12 +13,14 @@
 class Engine : public Php::Base {
     public: Engine() {
         Construct::framework();
-    } 
+    }   
 
     public: virtual ~Engine() {}
 
     public: void static Framework(Php::Parameters &param) {
+        Construct::start_session_db();
         Construct::framework_init(param);
+        Construct::error_handler();
         Construct::route_init();
     }
 

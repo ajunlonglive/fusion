@@ -33,6 +33,11 @@ class RouteMethod : public Php::Base {
         if(param_count > 3)
             Error::message::many_route_get_param();
 
+        // Get current route_hitted for guard checking if routing already response
+        std::string route_hitted = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
+        // If routing already response, break the execution
+        if(route_hitted != "" ) return;
+
         // Get request_method when user access the uri
         // !REQUEST_METHOD initialized coming from internal constructor Fusion
         std::string request_method = Database::get::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"});

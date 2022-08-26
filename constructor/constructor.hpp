@@ -26,11 +26,16 @@ namespace Construct {
         FUSION_DB["FS_FRAMEWORK_MODE"] = param[0];
 
         Database::set::array({"FUSION_STORE"}, FUSION_DB);
+    }
 
-        // Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_List"});
-        // Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Req_Uri_Split"});
+    void error_handler() {
+        Database::set::string({"FUSION_STORE", "FS_ERROR", "Filename"}, "");
     }
     
+    void start_session_db() {
+        Php::call("session_start");
+    }
+
     void route_init() {
         std::string request_uri = Php::eval("return $_SERVER['REQUEST_URI'];").stringValue();       
 
@@ -49,6 +54,7 @@ namespace Construct {
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"}, "true");
         Database::set::string({"FUSION_STORE", "FS_ROUTE", "OPTIONS_METHOD", "is_null"}, "true");
 
+        Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"}, "");
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"});
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"});

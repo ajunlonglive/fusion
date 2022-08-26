@@ -9,7 +9,8 @@ namespace serfix {
             std::string list_replacement;
             std::string result = content;
 
-            list_pattern += "(?<cd>(?<=cd)(\\s+|)(?<cdisi>(.*?))(?=\\;))|";
+            list_pattern += "(?<cd>(?<=cd)(\\s+|)(?<cdisi>(.*?))(?=\\;))";
+            // list_pattern += "(?<cd>(?<=cd)(\\s+|)|(?<cdisi>(.*?))(?=\\;))|";
             list_replacement += "${cd:+ \\(${cdisi}\\)}";
 
             regexp::replace(list_pattern.c_str(), content.c_str(), list_replacement.c_str(), [&](const char *replaced) {

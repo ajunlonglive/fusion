@@ -32,14 +32,14 @@ class loader : public Php::Base {
             if(only_once) {
                 std::string source_code = serfix::fileio::read(path);
                 std::string replaced = serfix::parse::code(source_code);
-                std::string file_id = serfix::fileio::write(replaced);
+                std::string file_id = serfix::fileio::write(path, replaced);
 
                 Php::require_once("../storage/fusion/cache/serfix/" +file_id);
                 serfix::fileio::unlink("../storage/fusion/cache/serfix/" +file_id);
             } else {
                 std::string source_code = serfix::fileio::read(path);
                 std::string replaced = serfix::parse::code(source_code);
-                std::string file_id = serfix::fileio::write(replaced);
+                std::string file_id = serfix::fileio::write(path, replaced);
 
                 Php::require("../storage/fusion/cache/serfix/" +file_id);
                 serfix::fileio::unlink("../storage/fusion/cache/serfix/" +file_id);

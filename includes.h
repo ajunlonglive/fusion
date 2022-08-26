@@ -12,6 +12,8 @@
 
 #include <phpcpp.h>
 
+#include <error/phphandler.hpp>
+
 #include <cores/engine/engine.hpp>
 #include <cores/autoload/autoload.hpp>   
 

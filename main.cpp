@@ -95,6 +95,7 @@ extern "C" {
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
         
         extension.add<cd>("cd");
+        extension.add<&Error::PhpHandler>("ErrorPhpHandler");
 
 
         // wrapped namespace, add to extension
