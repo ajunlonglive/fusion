@@ -6,7 +6,9 @@
 #include <components/gate/route/provider/service.hpp>
 #include <components/gate/route/provider/smart.hpp>
 #include <database/core.hpp>
+#include <error/routemethod.hpp>
 #include <regex/route.hpp>
+
 #include <iostream>
 
 #include <algorithm>
@@ -33,8 +35,12 @@ class RouteMethod : public Php::Base {
         if(param_count > 3)
             Error::message::many_route_get_param();
 
+        // When arguments prop is not same for conditional, throw errors  
+        error::route::method_prop_args(param);   
+
         // Get current route_hitted for guard checking if routing already response
         std::string route_hitted = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
+        
         // If routing already response, break the execution
         if(route_hitted != "" ) return;
 

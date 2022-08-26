@@ -6,8 +6,11 @@
 #include <components/gate/route/provider/service.hpp>
 #include <components/gate/route/provider/smart.hpp>
 #include <database/core.hpp>
+#include <error/routemethod.hpp>
 #include <regex/route.hpp>
+
 #include <iostream>
+
 
 class RouteGet : public Php::Base {
 
@@ -28,10 +31,15 @@ class RouteGet : public Php::Base {
         if(param_count > 2)
             Error::message::many_route_get_param();
 
+        // When arguments prop is not same for conditional, throw errors  
+        error::route::method_prop_args(param);   
+
         // Get current route_hitted for guard checking if routing already response
         std::string route_hitted = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
+        
         // If routing already response, break the execution
-        if(route_hitted != "" ) return;
+        if(route_hitted != "" )
+            return;
 
         // Get request_method when user access the uri
         // !REQUEST_METHOD initialized coming from internal constructor Fusion

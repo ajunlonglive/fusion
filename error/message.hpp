@@ -115,5 +115,10 @@ namespace Error {
         public: void static request_url_need_accessor(std::string method_name) {
             error("method " +method_name+ " need accessor before use it");
         }
+
+        public: void static arg_prop_error() {
+            error("route prop args cause a error");
+        }
+
     };
 }
