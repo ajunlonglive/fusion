@@ -60,10 +60,11 @@ namespace container {
 
             std::vector<Php::Value> depen_group;
             for(auto &p : get_param) {
-                // Deprecated in PHP 7.4~
+                // Deprecated in PHP 7.4~ if direct cast **->getType to string
                 // // Php::Value get_type = (p.second).call("getType");
                 // // depen_group.push_back(default_list( (std::string)get_type));
 
+                // Alternative, must call the getName for getType casting to string value
                 Php::Value get_type = (p.second).call("getType");
                 Php::Value get_type_name = get_type.call("getName");
 
