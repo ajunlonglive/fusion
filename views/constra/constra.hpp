@@ -100,8 +100,8 @@ class Constra : public Php::Base {
     }
 
     private: void cache_resource_to_file() {
-        file_id = Php::call("uniqid", "constra_", true).stringValue()  +"_"+ Database::session_id()+ ".php";
-        std::ofstream constra_cache("../storage/fusion/cache/" +file_id);
+        file_id = Php::call("uniqid", "constra_", true).stringValue()  +"_"+ Database::session_id()+ "_filename_..+app+Views+templates+" +filename+ ".php";
+        std::ofstream constra_cache("../storage/fusion/cache/constra/" +file_id);
         constra_cache << starter << std::endl;
         constra_cache << render_resource << std::endl;
         constra_cache.close();
@@ -121,9 +121,9 @@ class Constra : public Php::Base {
         cache_resource_to_file();
 
         // Calling the caches file
-        Php::require_once("../storage/fusion/cache/" +file_id);
+        Php::require_once("../storage/fusion/cache/constra/" +file_id);
 
         // Remove current caches file, using session_id and prefix constra as parameter file name
-        std::filesystem::remove("../storage/fusion/cache/" +file_id);
+        std::filesystem::remove("../storage/fusion/cache/constra/" +file_id);
     }
 };
