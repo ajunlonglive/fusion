@@ -11,7 +11,6 @@
 namespace serfix {
     class fileio {
         public: std::string static read(std::string filename) {
-            Database::set::string({"FUSION_STORE", "FS_ERROR", "Filename"}, filename);
             std::ifstream ifs(filename);
             std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
             return content;

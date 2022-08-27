@@ -6,6 +6,7 @@
 #include <error/message.hpp>
 #include <regex/route.hpp>
 #include <components/gate/route/provider/smart.hpp>
+#include <filesystem>
 
 #include <iostream>
 
@@ -55,7 +56,6 @@ namespace Construct {
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
         Database::set::empty_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"});
         Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"}, false);
-
         
         // RedisDb::set::push_array("FUSION_STORE/FS_ROUTE/FS_Web_Route_Identics_Param", {""});
         // RedisDb::set::push_array_field("FUSION_STORE/FS_ROUTE/FS_Web_Route_Identics_List", "null", "null");
