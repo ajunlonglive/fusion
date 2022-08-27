@@ -66,7 +66,7 @@ namespace container {
 
                 // Alternative, must call the getName for getType to casting name to string value
                 Php::Value get_type = (p.second).call("getType");
-                Php::Value get_type_name = get_type.call("getName");s
+                Php::Value get_type_name = get_type.call("getName");
 
                 depen_group.push_back(default_list( (std::string)get_type_name));
             }
