@@ -95,8 +95,7 @@ extern "C" {
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
         
         extension.add<cd>("cd");
-        extension.add<&Error::PhpHandler>("ErrorPhpHandler");
-
+        extension.add<&error::fusion_php_error_handler>("fusion_php_error_handler");
 
         // wrapped namespace, add to extension
         extension.add(std::move(fusion));

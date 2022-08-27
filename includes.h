@@ -12,7 +12,7 @@
 
 #include <phpcpp.h>
 
-#include <error/phphandler.hpp>
+#include <error/handler.hpp>
 
 #include <cores/engine/engine.hpp>
 #include <cores/autoload/autoload.hpp>   
