@@ -12,7 +12,8 @@
 
 #include <phpcpp.h>
 
-#include <error/handler.hpp>
+#include <error/internal/callback.hpp>
+#include <error/internal/handler.hpp>
 
 #include <cores/engine/engine.hpp>
 #include <cores/autoload/autoload.hpp>   
@@ -21,6 +22,7 @@
 #include <components/gate/route/context.hpp>
 
 #include <controllers/controller/controller.hpp>
+#include <controllers/buffer/engine/render.hpp>
 #include <http/request/input-capture.hpp>
 
 #include <components/gate/route/method/get.hpp>
@@ -37,3 +39,4 @@
 #include <cores/container/container.hpp>
 
 #include <functions/cd.hpp>
+#include <functions/reflector.hpp>

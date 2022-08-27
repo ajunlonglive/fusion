@@ -23,6 +23,7 @@ extern "C" {
         Php::Class<Route>           route("Components\\Gate\\Route");
         Php::Class<RouteContext>    route_context("Components\\Gate\\Route\\Context");
         Php::Class<Controller>      controller("Controllers\\Controller");
+        Php::Class<output_render>   buffer_render("Controllers\\Buffer\\Engine\\Render");
         
         Php::Class<Request>         request("Http\\Request");
         Php::Class<RouteGet>        route_get("Components\\Gate\\Route\\Method\\Get");
@@ -36,6 +37,11 @@ extern "C" {
         Php::Class<RouteMethod>     route_method("Components\\Gate\\Route\\Method\\Method");
 
         Php::Class<Constra>         constra("Views\\Constra");
+
+        Php::Class<error::internal::error_handler>   error_handler("Error\\InternalPhp\\Handler");
+
+
+        error_handler.method<&error::internal::error_handler::callback>("callback", {});
 
         constra.method<&Constra::__construct>("__construct", {});
         constra.method<&Constra::__destruct>("__destruct", {});
@@ -72,6 +78,9 @@ extern "C" {
         request.method<&Request::path>("path", {});
         request.method<&Request::full>("full", {});
 
+        buffer_render.method<&output_render::start>("start", {});
+        buffer_render.method<&output_render::end>("end", {});
+
         fusion.add(std::move(engine));
         fusion.add(std::move(autoload));
         fusion.add(std::move(route));
@@ -90,12 +99,16 @@ extern "C" {
         fusion.add(std::move(controller));
         fusion.add(std::move(request));
         fusion.add(std::move(constra));
+        fusion.add(std::move(error_handler));
+        fusion.add(std::move(buffer_render));
 
         extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
-        
+
+        fusion.add<&error::internal::fusion_php_error_handler>("Error\\InternalPhp\\FusionErrorHandler");
+
         extension.add<cd>("cd");
-        extension.add<&error::fusion_php_error_handler>("fusion_php_error_handler");
+        extension.add<reflector>("reflector");
 
         // wrapped namespace, add to extension
         extension.add(std::move(fusion));

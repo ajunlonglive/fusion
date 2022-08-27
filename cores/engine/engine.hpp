@@ -25,7 +25,7 @@ class Engine : public Php::Base {
         Construct::framework_init(param);
 
         // Start to handle Internal Php Error with FusionErrorHandler
-        Construct::error_handler();
+        // Construct::internal_error_handler();
 
         // Start to initialized 
         Construct::route_init();
@@ -34,7 +34,10 @@ class Engine : public Php::Base {
     public: void static Run() {
         Engine __construct;
         
+        Destruct::internal_error_handler();
+
         Destruct::route_init();
+
         Destruct::session_reset();
     }
 

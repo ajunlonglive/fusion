@@ -51,12 +51,12 @@ class loader : public Php::Base {
         // MVC client directory
         Php::Value app_config;
         
-        app_config["FS_MVC_Client_Dir"]["Controllers"] = "../app/Controllers/";
-        app_config["FS_MVC_Client_Dir"]["Models"]      = "../app/Models/";
+        app_config["FS_Framework_Dir"]["Config"]        = "../config/";
+        app_config["FS_MVC_Client_Dir"]["Controllers"]  = "../app/Controllers/";
+        app_config["FS_MVC_Client_Dir"]["Models"]       = "../app/Models/";
         // app_config["FS_MVC_Client_Dir"]["Views"]       = "../app/Views/";
 
         // Routes client directory
-
         app_config["FS_Routes_Client_Dir"] = "../routes/";
 
         Database::set::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"}, app_config);
@@ -66,6 +66,8 @@ class loader : public Php::Base {
     public: void static boot() {
         // Register the config as startup used for require_src
         Php::Value app_config = Database::get::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
+        
+        require_src(app_config["FS_Framework_Dir"]["Config"], true);   
 
         require_src(app_config["FS_MVC_Client_Dir"]["Controllers"], true);   
         require_src(app_config["FS_MVC_Client_Dir"]["Models"], true);

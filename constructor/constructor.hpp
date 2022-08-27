@@ -28,12 +28,6 @@ namespace Construct {
         Database::set::array({"FUSION_STORE"}, FUSION_DB);
     }
 
-    void error_handler() {
-        Database::set::string({"FUSION_STORE", "FS_ERROR", "Filename"}, "");
-        
-        Php::call("register_shutdown_function", "fusion_php_error_handler");
-    }
-    
     void start_session_db() {
         Php::call("session_start");
     }

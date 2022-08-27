@@ -46,6 +46,17 @@ class Destruct : public Php::Base {
         // RedisDb::flushall();
     }
 
+    public: void static internal_error_handler() {
+        // When Serfix used for pre-parser to CGI, add data in dbcore to get actual script for error events
+        Database::set::string({"FUSION_STORE", "FS_ERROR", "Filename"}, "");
+
+        // Get data for error handler use to
+        std::string php_error_handler = Database::get::string({"FUSION_STORE", "FS_ERROR", "Php_Error_Handler_Function"});
+        
+        // Set register shutdown for function PhpErrorHandler, to catch all error events
+        Php::call("register_shutdown_function", php_error_handler);
+    }
+
     public: void static session_reset() {
         Php::call("session_destroy");
     }
