@@ -13,10 +13,14 @@ std::string str_repeat(std::string value, int notation) {
 }
 
 
-std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index_name = "") {
+std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index_name = "", bool add_css_style = true) {
     std::string buffer;
     std::string array_type;
     std::string spaceheader;
+
+    if(add_css_style) {
+        Php::out << "<style>details[open] > summary::marker { font-size: 12px; } details > summary::marker { font-size: 12px; }</style>" << std::flush;
+    }
 
     if((nbsp_space == 0)) {
         spaceheader = "0";
@@ -37,13 +41,13 @@ std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index
         if(array_type != "stdClass")
             buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>object(" +Php::count(array).stringValue()+ ") [" +array_type+ "]</span> {</summary>";
     } else {
-        buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>array(" +Php::count(array).stringValue()+ ") [" +index_name+ "]</span> (</summary>";
+        buffer += "<details open style=\"margin-left: " +spaceheader+ "px;\"><summary><span>array(" +Php::count(array).stringValue()+ ") [" +index_name+ "]</span></summary>";
     }
 
     for(auto &arrays : array) {
         if(Php::call("is_array", arrays.second).boolValue() || Php::call("is_object", arrays.second).boolValue()) {
             std::string index_name = arrays.first;
-            buffer += array_parser(arrays.second, 30, index_name);
+            buffer += array_parser(arrays.second, 30, index_name, false);
         } else {
             buffer += "<span style=\"margin-left: 30px; \">[" +(std::string)arrays.first+ "] => " +(std::string)arrays.second+ "</span><br />";
         }
