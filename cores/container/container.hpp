@@ -23,27 +23,6 @@ namespace container {
     }
 
     class loader : public Php::Base {
-
-        /**
-         * @brief A method used for return object a selected dependencies for each type
-         * 
-         * @param type_name (std::string) used for selecting type class name based string name class
-         * 
-         * @return (Pho::Object) A Object based for PHP Context, returned current context dependencies. 
-         * 
-         */
-        // private: Php::Object static default_list(std::string type_name) {
-
-        //     /**
-        //      * @note Fusion import the default class all lib injection
-        //      *       which is stored in ./default.h
-        //      * 
-        //      *      ** The default class all from fusion enviroment, which auto included when user type-hint in parameter.
-        //      */
-        //     DefaultContainer default_container;
-        //     return default_container.object_class(type_name);
-        // }
-
         /**
          * @brief the "Method" method used for Reflection each class-method to get parameter type & interface as list.
          * 
@@ -82,7 +61,7 @@ namespace container {
          * @brief the "Function" method used for Reflection each function to get parameter type & interface as list.
          * 
          * 
-         * @return              (std::vector<Php::Object>) return a vector data with (Php::Object) type. each element contains a object method for injection requirements
+         * @return (std::vector<Php::Object>) return a vector data with (Php::Object) type. each element contains a object method for injection requirements
          * 
          */
         public: std::vector<Php::Value> static function(Php::Value function_name) {
