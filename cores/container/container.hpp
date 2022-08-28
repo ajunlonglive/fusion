@@ -93,14 +93,17 @@ namespace container {
 
             std::vector<Php::Value> depen_group;
             for(auto &p : get_param) {
-                Php::Value get_type = (p.second).call("getType");
-                depen_group.push_back(default_list( (std::string)get_type ));
-            }
+                // Deprecated in PHP 7.1-7.4~ for ReflectionType::__toString(); if direct cast **->getType to string
+                // // Php::Value get_type = (p.second).call("getType");
+                // // depen_group.push_back(default_list( (std::string)get_type));
 
-            // std::vector<Php::Value> depen_group;
-            // for(auto &param : dependencies) {
-            //     depen_group.push_back(default_list(param.second));
-            // }
+                 // Alternative, must call the getName for getType to casting name to string value
+                Php::Value get_type = (p.second).call("getType");
+                Php::Value get_type_name = get_type.call("getName");
+
+                // Push the type to dependencies group map
+                depen_group.push_back(default_list( (std::string)get_type_name));
+            }
 
             return depen_group;
         }
