@@ -99,7 +99,7 @@ class c_web : public Php::Base {
 
 
                 // Import default dependencies lib for Dependency Injection
-                std::vector<Php::Value> args = container::loader::method(user_controller_name, user_method_name);
+                std::vector<Php::Value> args = cores::container::c_loader::m_method(user_controller_name, user_method_name);
 
                 // Declare class method for init object class
                 Php::Value class_method;
@@ -120,7 +120,7 @@ class c_web : public Php::Base {
                 std::string user_controller_name = handler_opt;
 
                 // Import default dependencies lib for Dependency Injection
-                std::vector<Php::Value> args = container::loader::method(user_controller_name, "__invoke");
+                std::vector<Php::Value> args = cores::container::c_loader::m_method(user_controller_name, "__invoke");
 
                 // Setup for DI to PHP __construct()
                 // Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
@@ -142,7 +142,7 @@ class c_web : public Php::Base {
             // Closure callback controller, connected to DI Container
             if(Php::call("is_callable", handler_opt).boolValue()) {
                 // Import default dependencies lib for Dependency Injection
-                std::vector<Php::Value> args = container::loader::function(handler_opt);
+                std::vector<Php::Value> args = cores::container::c_loader::m_function(handler_opt);
 
                 // call the callback with injected dependencies
                 Php::call("call_user_func_array", handler_opt, args);
