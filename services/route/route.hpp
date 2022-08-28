@@ -7,7 +7,6 @@
 #include <error/message.hpp>
 #include <http/request/request.hpp>
 #include <regex/route.hpp>
-#include <http/request/input-capture.hpp>
 #include <services/route/guard.hpp>
 #include <cores/container/container.hpp>
 #include <views/error/page.hpp>
@@ -153,7 +152,7 @@ class c_web : public Php::Base {
             }
 
             // Throw error exception for not given conditional arguments
-
+            // ...
         }
     }
 
@@ -182,7 +181,7 @@ class c_web : public Php::Base {
         if(patch_method  == "true" && request_method == "PATCH")       error_page::Patch::code_404();   
         if(delete_method == "true" && request_method == "DELETE")      error_page::Delete::code_404();    
         if(delete_method == "true" && request_method == "OPTIONS")     error_page::Delete::code_404();    
-        
+
     }
 
     /**

@@ -2,7 +2,6 @@
 
 #include <phpcpp.h>
 #include <transport/session/session.hpp>
-#include <http/request/input-capture.hpp>
 #include <http/request/utils.hpp>
 #include <error/message.hpp>
 #include <utils/string.hpp>
