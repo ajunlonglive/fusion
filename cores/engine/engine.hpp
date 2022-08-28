@@ -12,7 +12,7 @@
 
 namespace cores {
 
-    
+
 class c_engine : public Php::Base {
     public: c_engine() {
         Construct::framework();

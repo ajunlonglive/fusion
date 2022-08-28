@@ -9,10 +9,10 @@
 #include <vector>
 
 
-namespace cores {
-    namespace container {
+namespace cores {   
 
-class c_loader : public Php::Base {
+
+class c_container : public Php::Base {
     
    /**
      * @note Fusion import the default class all lib injection
@@ -91,5 +91,4 @@ class c_loader : public Php::Base {
 };
 
 
-    }
 }

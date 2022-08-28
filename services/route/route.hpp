@@ -17,7 +17,6 @@
 
 #define COMPARE_REQ_METHOD(set, req, method) set ? true : req == method ? true : false;
 
-
 namespace services {
     namespace route {
 
@@ -66,13 +65,13 @@ class c_web : public Php::Base {
          * 
          */
         bool set_method = request_method == "REDIRECT" ? true : false;
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "GET");
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "POST");
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "PUT");
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "PATCH");
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "DELETE");
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "ANY");
-        set_method = COMPARE_REQ_METHOD(set_method, request_method, "METHOD");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "GET");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "POST");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "PUT");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "PATCH");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "DELETE");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "ANY");
+             set_method = COMPARE_REQ_METHOD(set_method, request_method, "METHOD");
 
         if(set_method) {
 
@@ -81,6 +80,7 @@ class c_web : public Php::Base {
                 // Call header function, do Location command for redirect to destination
                 Php::eval("header('Location: " +(std::string)handler_opt+ "');");
 
+                // Break the script execution
                 return void();
             }
 
@@ -99,7 +99,7 @@ class c_web : public Php::Base {
 
 
                 // Import default dependencies lib for Dependency Injection
-                std::vector<Php::Value> args = cores::container::c_loader::m_method(user_controller_name, user_method_name);
+                std::vector<Php::Value> args = cores::c_container::m_method(user_controller_name, user_method_name);
 
                 // Declare class method for init object class
                 Php::Value class_method;
@@ -111,6 +111,7 @@ class c_web : public Php::Base {
                 // Call the method with injected dependencies
                 Php::call("call_user_func_array", class_method, args);
 
+                // Break the script execution
                 return void();
             }               
 
@@ -120,7 +121,7 @@ class c_web : public Php::Base {
                 std::string user_controller_name = handler_opt;
 
                 // Import default dependencies lib for Dependency Injection
-                std::vector<Php::Value> args = cores::container::c_loader::m_method(user_controller_name, "__invoke");
+                std::vector<Php::Value> args = cores::c_container::m_method(user_controller_name, "__invoke");
 
                 // Setup for DI to PHP __construct()
                 // Php::Value reflect_class = Php::Object("ReflectionClass", user_controller_name);
@@ -136,13 +137,14 @@ class c_web : public Php::Base {
                 // Call the method with injected dependencies
                 Php::call("call_user_func_array", class_method, args);
 
+                // Break the script execution
                 return void();
             }
 
             // Closure callback controller, connected to DI Container
             if(Php::call("is_callable", handler_opt).boolValue()) {
                 // Import default dependencies lib for Dependency Injection
-                std::vector<Php::Value> args = cores::container::c_loader::m_function(handler_opt);
+                std::vector<Php::Value> args = cores::c_container::m_function(handler_opt);
 
                 // call the callback with injected dependencies
                 Php::call("call_user_func_array", handler_opt, args);
@@ -173,13 +175,14 @@ class c_web : public Php::Base {
         std::string patch_method = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "PATCH_METHOD", "is_null"});
         std::string delete_method = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "DELETE_METHOD", "is_null"});
 
-        if(get_method == "true" && request_method == "GET")         error_page::Get::code_404();    
-        if(post_method == "true" && request_method == "POST")       error_page::Post::code_404();   
-        if(post_method == "true" && request_method == "HEAD")       error_page::Post::code_404();   
-        if(put_method == "true" && request_method == "PUT")         error_page::Put::code_404();   
-        if(patch_method == "true" && request_method == "PATCH")     error_page::Patch::code_404();   
-        if(delete_method == "true" && request_method == "DELETE")   error_page::Delete::code_404();    
-        if(delete_method == "true" && request_method == "OPTIONS")  error_page::Delete::code_404();    
+        if(get_method    == "true" && request_method == "GET")         error_page::Get::code_404();    
+        if(post_method   == "true" && request_method == "POST")        error_page::Post::code_404();   
+        if(post_method   == "true" && request_method == "HEAD")        error_page::Post::code_404();   
+        if(put_method    == "true" && request_method == "PUT")         error_page::Put::code_404();   
+        if(patch_method  == "true" && request_method == "PATCH")       error_page::Patch::code_404();   
+        if(delete_method == "true" && request_method == "DELETE")      error_page::Delete::code_404();    
+        if(delete_method == "true" && request_method == "OPTIONS")     error_page::Delete::code_404();    
+        
     }
 
     /**
