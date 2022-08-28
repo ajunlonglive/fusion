@@ -18,94 +18,98 @@ extern "C" {
 
         Php::Namespace fusion("Fusion");
 
-        Php::Class<Engine>          engine("Cores\\Engine");
-        Php::Class<Autoload>        autoload("Cores\\Autoload");
-        Php::Class<Route>           route("Components\\Gate\\Route");
-        Php::Class<RouteContext>    route_context("Components\\Gate\\Route\\Context");
-        Php::Class<Controller>      controller("Controllers\\Controller");
-        Php::Class<output_render>   buffer_render("Controllers\\Buffer\\Engine\\Render");
+        Php::Class<cores::c_engine>                                     cores_engine                                ("Cores\\Engine");
+        Php::Class<cores::c_autoload>                                   cores_autoload                              ("Cores\\Autoload");
         
-        Php::Class<Request>         request("Http\\Request");
-        Php::Class<RouteGet>        route_get("Components\\Gate\\Route\\Method\\Get");
-        Php::Class<RoutePost>       route_post("Components\\Gate\\Route\\Method\\Post");
-        Php::Class<RouteHead>       route_head("Components\\Gate\\Route\\Method\\Head");
-        Php::Class<RoutePut>        route_put("Components\\Gate\\Route\\Method\\Put");
-        Php::Class<RoutePatch>      route_patch("Components\\Gate\\Route\\Method\\Patch");
-        Php::Class<RouteOptions>    route_options("Components\\Gate\\Route\\Method\\Options");
-        Php::Class<RouteRedirect>   route_redirect("Components\\Gate\\Route\\Method\\Redirect");
-        Php::Class<RouteAny>        route_any("Components\\Gate\\Route\\Method\\Any");
-        Php::Class<RouteMethod>     route_method("Components\\Gate\\Route\\Method\\Method");
-
-        Php::Class<Constra>         constra("Views\\Constra");
-
-        Php::Class<error::internal::error_handler>   error_handler("Error\\InternalPhp\\Handler");
-
-
-        error_handler.method<&error::internal::error_handler::callback>("callback", {});
-
-        constra.method<&Constra::__construct>("__construct", {});
-        constra.method<&Constra::__destruct>("__destruct", {});
-
-        // routeget.method<&RouteGet::test>("test", {});
-
-        // constra.method<&Constra::test>("test", {});
-
-        engine.method<&Engine::Framework>("Framework", {});
-        engine.method<&Engine::Run>("Run", {});
-
-        autoload.method<&Autoload::Config>("Config", {});
-        autoload.method<&Autoload::Register>("Register", {});
-
-        route.method<&Route::get>("Get", {});
-        route.method<&Route::post>("Post", {});
-        route.method<&Route::head>("Head", {});
-        route.method<&Route::put>("Put", {});
-        route.method<&Route::patch>("Patch", {});
-        route.method<&Route::options>("Options", {});
-        route.method<&Route::redirect>("Redirect", {});
-        route.method<&Route::any>("Any", {});
-        route.method<&Route::method>("Method", {});
-
-        route_context.method<&RouteContext::code_501>("code_501", {});
-        route_context.method<&RouteContext::uri>("uri", {});
-        route_context.method<&RouteContext::parse>("parse", {});
-
-        controller.method<&Controller::Class>("Class", {});
+        Php::Class<controllers::c_controller>                           controllers_controller                      ("Controllers\\Controller");
         
-        request.method<&Request::__construct>("__construct", {});
-        // request.method<&Request::parse>("parse", {});
-        request.method<&Request::url>("url", {});
-        request.method<&Request::path>("path", {});
-        request.method<&Request::full>("full", {});
+        Php::Class<http::c_request>                                     http_request                                ("Http\\Request");
 
-        buffer_render.method<&output_render::start>("start", {});
-        buffer_render.method<&output_render::end>("end", {});
+        Php::Class<components::gate::c_route>                           components_gate_route                       ("Components\\Gate\\Route");
+        Php::Class<components::gate::route::c_route_context>            components_gate_route_route_context         ("Components\\Gate\\Route\\Context");
+        Php::Class<components::gate::route::method::c_route_get>        components_gate_route_method_route_get      ("Components\\Gate\\Route\\Method\\Get");
+        Php::Class<components::gate::route::method::c_route_post>       components_gate_route_method_route_post     ("Components\\Gate\\Route\\Method\\Post");
+        Php::Class<components::gate::route::method::c_route_head>       components_gate_route_method_route_head     ("Components\\Gate\\Route\\Method\\Head");
+        Php::Class<components::gate::route::method::c_route_put>        components_gate_route_method_route_put      ("Components\\Gate\\Route\\Method\\Put");
+        Php::Class<components::gate::route::method::c_route_patch>      components_gate_route_method_route_patch    ("Components\\Gate\\Route\\Method\\Patch");
+        Php::Class<components::gate::route::method::c_route_options>    components_gate_route_method_route_options  ("Components\\Gate\\Route\\Method\\Options");
+        Php::Class<components::gate::route::method::c_route_redirect>   components_gate_route_method_route_redirect ("Components\\Gate\\Route\\Method\\Redirect");
+        Php::Class<components::gate::route::method::c_route_any>        components_gate_route_method_route_any      ("Components\\Gate\\Route\\Method\\Any");
+        Php::Class<components::gate::route::method::c_route_method>     components_gate_route_method_route_method   ("Components\\Gate\\Route\\Method\\Method");
 
-        fusion.add(std::move(engine));
-        fusion.add(std::move(autoload));
-        fusion.add(std::move(route));
-        fusion.add(std::move(route_context));
+        Php::Class<views::c_constra>                                    views_constra                               ("Views\\Constra");
 
-        fusion.add(std::move(route_get));
-        fusion.add(std::move(route_post));
-        fusion.add(std::move(route_head));
-        fusion.add(std::move(route_put));
-        fusion.add(std::move(route_patch));
-        fusion.add(std::move(route_options));
-        fusion.add(std::move(route_redirect));
-        fusion.add(std::move(route_any));
-        fusion.add(std::move(route_method));
+        Php::Class<error::internal::error_handler>                      error_internal_error_handler                ("Error\\InternalPhp\\Handler");
 
-        fusion.add(std::move(controller));
-        fusion.add(std::move(request));
-        fusion.add(std::move(constra));
-        fusion.add(std::move(error_handler));
-        fusion.add(std::move(buffer_render));
+
+        // Engine module dependencies
+        cores_engine.method<&cores::c_engine::m_framework>("Framework", {});
+        cores_engine.method<&cores::c_engine::m_run>("Run", {});
+        // Autoload/Loader dependencies
+        cores_autoload.method<&cores::c_autoload::m_config>("Config", {});
+        cores_autoload.method<&cores::c_autoload::m_register>("Register", {});
+
+
+        // HTTP Request dependencies
+        http_request.method<&http::c_request::__construct>("__construct", {});
+        http_request.method<&http::c_request::m_url>("url", {});
+        http_request.method<&http::c_request::m_path>("path", {});
+        http_request.method<&http::c_request::m_full>("full", {});
+        
+
+        // Route method dependencies
+        components_gate_route.method<&components::gate::c_route::m_get>("Get", {});
+        components_gate_route.method<&components::gate::c_route::m_post>("Post", {});
+        components_gate_route.method<&components::gate::c_route::m_head>("Head", {});
+        components_gate_route.method<&components::gate::c_route::m_put>("Put", {});
+        components_gate_route.method<&components::gate::c_route::m_patch>("Patch", {});
+        components_gate_route.method<&components::gate::c_route::m_options>("Options", {});
+        components_gate_route.method<&components::gate::c_route::m_redirect>("Redirect", {});
+        components_gate_route.method<&components::gate::c_route::m_any>("Any", {});
+        components_gate_route.method<&components::gate::c_route::m_method>("Method", {});
+
+        // Route context dependencies
+        components_gate_route_route_context.method<&components::gate::route::c_route_context::m_uri>("uri", {});
+        components_gate_route_route_context.method<&components::gate::route::c_route_context::m_parse>("parse", {});
+
+
+        // Constra dependencies
+        views_constra.method<&views::c_constra::__construct>("__construct", {});
+        views_constra.method<&views::c_constra::__destruct>("__destruct", {});
+
+
+        // Internal PHP error handler dependencies
+        error_internal_error_handler.method<&error::internal::error_handler::callback>("callback", {});
+
+
+        fusion.add(std::move(cores_engine));
+        fusion.add(std::move(cores_autoload));
+
+        fusion.add(std::move(controllers_controller));
+
+        fusion.add(std::move(http_request));
+
+        fusion.add(std::move(components_gate_route_method_route_get));
+        fusion.add(std::move(components_gate_route_method_route_post));
+        fusion.add(std::move(components_gate_route_method_route_head));
+        fusion.add(std::move(components_gate_route_method_route_put));
+        fusion.add(std::move(components_gate_route_method_route_patch));
+        fusion.add(std::move(components_gate_route_method_route_options));
+        fusion.add(std::move(components_gate_route_method_route_redirect));
+        fusion.add(std::move(components_gate_route_method_route_any));
+        fusion.add(std::move(components_gate_route_method_route_method));
+
+        fusion.add(std::move(components_gate_route));
+        fusion.add(std::move(components_gate_route_route_context));
+
+        fusion.add(std::move(views_constra));
+        
+        fusion.add(std::move(error_internal_error_handler));
+
+        fusion.add<&error::internal::fusion_php_error_handler>("Error\\InternalPhp\\FusionErrorHandler");
 
         extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
-
-        fusion.add<&error::internal::fusion_php_error_handler>("Error\\InternalPhp\\FusionErrorHandler");
 
         extension.add<cd>("cd");
         extension.add<reflector>("reflector");

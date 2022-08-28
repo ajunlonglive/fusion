@@ -4,7 +4,7 @@
 
 #include <error/message.hpp>
 #include <regex/wrapper/pcre2.hpp>
-#include <components/gate/route/provider/smart.hpp>
+#include <services/route/guard.hpp>
 
 #include <vector>
 

@@ -4,7 +4,7 @@
 
 #include <views/constra/context.hpp>
 #include <regex/wrapper/pcre2.hpp>
-#include <database/core.hpp>
+#include <transport/session/session.hpp>
 #include <utils/function.hpp>
 #include <error/message.hpp>
 
@@ -13,15 +13,19 @@
 #include <string>
 #include <filesystem>
 
-class Constra : public Php::Base {
+
+namespace views {
+
+
+class c_constra : public Php::Base {
     public: std::string render_resource;
     public: std::string starter;
     public: Php::Value variables;
     public: std::string filename;
     public: std::string file_id;
 
-    public: Constra() = default;
-    public: virtual ~Constra() = default;
+    public: c_constra() = default;
+    public: virtual ~c_constra() = default;
 
     public: void __construct(Php::Parameters &param) {
         if(Php::count(param) > 2)
@@ -100,7 +104,7 @@ class Constra : public Php::Base {
     }
 
     private: void cache_resource_to_file() {
-        file_id = Php::call("uniqid", "constra_", true).stringValue()  +"_"+ Database::session_id()+ "_filename_..+app+Views+templates+" +filename+ ".php";
+        file_id = Php::call("uniqid", "constra_", true).stringValue()  +"_"+ transport::session::f_session_id()+ "_filename_..+app+Views+templates+" +filename+ ".php";
         std::ofstream constra_cache("../storage/fusion/cache/constra/" +file_id);
         constra_cache << starter << std::endl;
         constra_cache << render_resource << std::endl;
@@ -127,3 +131,6 @@ class Constra : public Php::Base {
         std::filesystem::remove("../storage/fusion/cache/constra/" +file_id);
     }
 };
+
+
+}

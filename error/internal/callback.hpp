@@ -8,7 +8,7 @@
 #include <phpcpp.h>
 
 #include <regex/wrapper/pcre2.hpp>
-#include <database/core.hpp>
+#include <transport/session/session.hpp>
 
 namespace error {
     namespace internal {
@@ -22,7 +22,7 @@ namespace error {
                 result = replaced;
             });
             
-            std::string app_path = Database::get::string({"FUSION_STORE", "FS_ERROR", "Filename"});
+            std::string app_path = transport::session::c_get::m_string({"FUSION_STORE", "FS_ERROR", "Filename"});
             return app_path + (std::string)result;
         }
 

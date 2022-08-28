@@ -1,11 +1,11 @@
 #pragma once
 
 #include <phpcpp.h>
-#include <database/core.hpp>
-#include <database/redis.hpp>
+#include <transport/session/session.hpp>
+// #include <database/redis.hpp>
 #include <cores/autoload/loader.hpp>
-#include <components/gate/route/provider/service.hpp>
-#include <components/gate/route/provider/smart.hpp>
+#include <services/route/route.hpp>
+#include <services/route/guard.hpp>
 #include <destructor/destructor.hpp>
 
 class Destruct : public Php::Base {
@@ -17,10 +17,10 @@ class Destruct : public Php::Base {
     public: void static route_init() {
 
         // running first loader::route, grab all php files which include router config and aneccesary
-        loader::route();
+        cores::autoload::c_loader::m_route();
         
         // run all service in SmartRouter
-        SmartRouter::run();
+        services::route::c_guard::m_run();
 
         // if router can't find any double/twice router grouping, reset data parameter
         // SmartRouter::reset_v_double();
@@ -36,12 +36,13 @@ class Destruct : public Php::Base {
         // if (debug_only == ok?) run the code...
 
         // reset FS_Web_Route_list again for running procedure again
-        RouteService::web::reset_route_list(); // reset web route list
-        SmartRouter::permist_step_mode();
+        services::route::c_web::m_reset_route_list(); // reset web route list
+        services::route::c_guard::m_permist_step_mode();
 
         // run again for trigger a routing grouping
-        loader::route();
-        RouteService::web::flush();
+        cores::autoload::c_loader::m_route();
+
+        services::route::c_web::m_flush();
 
         // RedisDb::flushall();
     }
@@ -50,10 +51,10 @@ class Destruct : public Php::Base {
         
         // When Serfix used for pre-parser to CGI, add data in dbcore to get actual script for error events
         std::string app_path = Php::call("dirname", Php::call("realpath", "index.php"), 2);
-        Database::set::string({"FUSION_STORE", "FS_ERROR", "Filename"}, app_path);
+        transport::session::c_set::m_string({"FUSION_STORE", "FS_ERROR", "Filename"}, app_path);
 
         // Get data for error handler use to
-        std::string php_error_handler = Database::get::string({"FUSION_STORE", "FS_ERROR", "Php_Error_Handler_Function"});
+        std::string php_error_handler = transport::session::c_get::m_string({"FUSION_STORE", "FS_ERROR", "Php_Error_Handler_Function"});
 
         // Set register shutdown for function PhpErrorHandler, to catch all error events
         Php::call("register_shutdown_function", php_error_handler);

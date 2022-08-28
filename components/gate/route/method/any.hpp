@@ -3,17 +3,24 @@
 #include <phpcpp.h>
 
 #include <constructor/constructor.hpp>
-#include <components/gate/route/provider/service.hpp>
-#include <components/gate/route/provider/smart.hpp>
-#include <database/core.hpp>
+#include <services/route/route.hpp>
+#include <services/route/guard.hpp>
+#include <transport/session/session.hpp>
 #include <error/routemethod.hpp>
 #include <regex/route.hpp>
 
 #include <iostream>
 
-class RouteAny : public Php::Base {
 
-    public: RouteAny(Php::Parameters &param) {
+namespace components {
+    namespace gate {
+        namespace route {
+            namespace method {
+    
+
+class c_route_any : public Php::Base {
+
+    public: c_route_any(Php::Parameters &param) {
         // Init param length from parameter
         int param_count = Php::count(param);
 
@@ -33,7 +40,7 @@ class RouteAny : public Php::Base {
         error::route::method_prop_args(param);   
 
         // Get current route_hitted for guard checking if routing already response
-        std::string route_hitted = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
+        std::string route_hitted = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
 
         // If routing already response, break the execution
         if(route_hitted != "" ) return;
@@ -65,29 +72,35 @@ class RouteAny : public Php::Base {
 
         // Get FS_REQUEST_URI from user client request
         // !FS_REQUEST_URI initialized coming from internal constructor Fusion
-        std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
+        std::string request_uri = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
         
-        // Get permist_step in false value for blocking SmartRouter::validate
-        bool permist_step = Database::get::boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"});
+        // Get permist_step in false value for blocking services::route::c_guard::m_validate
+        bool permist_step = transport::session::c_get::m_boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"});
 
         // Push the escaped uri route to FS_Web_Route_Lists
-        RouteService::web::push(escape_uri_route);
+        services::route::c_web::m_push(escape_uri_route);
 
         // When permist_step still false (a first step SmartRouter running), regist escaped uri_route to FS_Web_Route_Identics_Lists
-        if(SmartRouter::regist(escape_uri_route, permist_step)) {
-            parsed_uri_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
+        if(services::route::c_guard::m_regist(escape_uri_route, permist_step)) {
+            parsed_uri_route_list = transport::session::c_get::m_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
         }
 
-        // permist_step used for blocking SmartRouter::validate
-        // When secondstep SmartRouter running, permist step setted to true which is make SmartRouter::validate can run
-        if(permist_step && SmartRouter::validate(parsed_uri_route_list[escape_uri_route], escape_uri_route, request_uri)) {
+        // permist_step used for blocking services::route::c_guard::m_validate
+        // When secondstep SmartRouter running, permist step setted to true which is make services::route::c_guard::m_validate can run
+        if(permist_step && services::route::c_guard::m_validate(parsed_uri_route_list[escape_uri_route], escape_uri_route, request_uri)) {
             
             // Override REQUEST_METHOD to ANY, for not trigger actually request method
-            Database::set::string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"}, "ANY");
+            transport::session::c_set::m_string({"FUSION_STORE", "FS_ROUTE", "REQUEST_METHOD"}, "ANY");
 
             // Finally, assign uri_route, ptional handle, request method to RouteService
-            RouteService::web::assign(escape_uri_route, handler_opt, "ANY");
+            services::route::c_web::m_assign(escape_uri_route, handler_opt, "ANY");
         }
     }
     
 };
+
+
+            }
+        }
+    }
+}

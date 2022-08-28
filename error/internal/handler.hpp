@@ -2,7 +2,7 @@
 
 #include <phpcpp.h>
 
-#include <database/core.hpp>
+#include <transport/session/session.hpp>
 
 #include <iostream>
 
@@ -17,7 +17,7 @@ namespace error {
         
                 // Php::out << function_name << " <- function name" << std::flush;
 
-                Database::set::string({"FUSION_STORE", "FS_ERROR", "Php_Error_Handler_Function"}, function_name);
+                transport::session::c_set::m_string({"FUSION_STORE", "FS_ERROR", "Php_Error_Handler_Function"}, function_name);
             }
         };
     }

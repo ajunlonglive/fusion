@@ -2,8 +2,10 @@
 
 #include <phpcpp.h>
 
-class Controller : public Php::Base {
-    public: Php::Value static Class() {
-        return Php::call("get_called_class");
-    }
+namespace controllers {
+
+class c_controller : public Php::Base {
+    
 };
+    
+}

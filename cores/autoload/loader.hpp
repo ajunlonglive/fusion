@@ -1,7 +1,7 @@
 #pragma once
 #include <phpcpp.h>
 
-#include <database/core.hpp>
+#include <transport/session/session.hpp>
 #include <serfix/fileio.hpp>
 #include <serfix/parser.hpp>
 
@@ -9,15 +9,18 @@
 #include <functional>
 #include <dirent.h>
 
-class loader : public Php::Base {
-    private: void static list_files(const std::string &path, std::function<void(const std::string &)> cb) {
+namespace cores {
+    namespace autoload {
+
+class c_loader : public Php::Base {
+    private: void static m_list_files(const std::string &path, std::function<void(const std::string &)> cb) {
         if (auto dir = opendir(path.c_str())) {
             while (auto f = readdir(dir)) {
                 if (!f->d_name || f->d_name[0] == '.')
                     continue;
                 
                 if (f->d_type == DT_DIR) 
-                    list_files(path + f->d_name + "/", cb);
+                    m_list_files(path + f->d_name + "/", cb);
 
                 if (f->d_type == DT_REG)
                     cb(path + f->d_name);
@@ -26,9 +29,9 @@ class loader : public Php::Base {
         }
     }
 
-    private: void static require_src(Php::Value p_directory, bool only_once) {
+    private: void static m_require_src(Php::Value p_directory, bool only_once) {
         std::string directory = p_directory;
-        list_files(directory, [&](const std::string &path) {
+        m_list_files(directory, [&](const std::string &path) {
             if(only_once) {
                 std::string source_code = serfix::fileio::read(path);
                 std::string replaced = serfix::parse::code(source_code);
@@ -47,7 +50,7 @@ class loader : public Php::Base {
         });
     }
 
-    public: void static _default() {
+    public: void static m_default() {
         // MVC client directory
         Php::Value app_config;
         
@@ -59,25 +62,29 @@ class loader : public Php::Base {
         // Routes client directory
         app_config["FS_Routes_Client_Dir"] = "../routes/";
 
-        Database::set::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"}, app_config);
+        transport::session::c_set::m_array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"}, app_config);
         
     }
 
-    public: void static boot() {
+    public: void static m_boot() {
         // Register the config as startup used for require_src
-        Php::Value app_config = Database::get::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
+        Php::Value app_config = transport::session::c_get::m_array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
         
-        require_src(app_config["FS_Framework_Dir"]["Config"], true);   
+        m_require_src(app_config["FS_Framework_Dir"]["Config"], true);   
 
-        require_src(app_config["FS_MVC_Client_Dir"]["Controllers"], true);   
-        require_src(app_config["FS_MVC_Client_Dir"]["Models"], true);
-        require_src(app_config["FS_MVC_Client_Dir"]["Views"], true);
+        m_require_src(app_config["FS_MVC_Client_Dir"]["Controllers"], true);   
+        m_require_src(app_config["FS_MVC_Client_Dir"]["Models"], true);
+        m_require_src(app_config["FS_MVC_Client_Dir"]["Views"], true);
         
     }
 
-    public: void static route() {
-        Php::Value app_config = Database::get::array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
-        require_src(app_config["FS_Routes_Client_Dir"], false);
+    public: void static m_route() {
+        Php::Value app_config = transport::session::c_get::m_array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
+        m_require_src(app_config["FS_Routes_Client_Dir"], false);
     }
 
 };
+
+
+    }
+}

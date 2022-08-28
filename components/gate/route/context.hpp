@@ -2,28 +2,32 @@
 
 #include <phpcpp.h>
 
+#include <transport/session/session.hpp>
+
 #include <iostream>
 
-class RouteContext : public Php::Base {
-    public: std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
-    public: std::string uri_route = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
+
+namespace components {
+    namespace gate {
+        namespace route {
+
+
+class c_route_context : public Php::Base {
+    public: std::string request_uri = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"});
+    public: std::string uri_route = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "FS_Route_Hitted"});
     public: bool uri_accessor = false;
 
-    public: void code_501() {
-        Php::out << "Error: 501" << std::flush;
-    }
-
-    public: Php::Value uri() {
+    public: Php::Value m_uri() {
         uri_accessor = true;
         return (Php::Object)this;
     }
 
-    public: Php::Value parse(Php::Parameters &index_uri) {
+    public: Php::Value m_parse(Php::Parameters &index_uri) {
         if(!uri_accessor) Error::message::request_url_need_accessor("parse");
         uri_accessor = false;
         // utils::replaceAll(uri_route, "$fs_bs$", "\\");
 
-        std::string request_uri = Database::get::string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
+        std::string request_uri = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
 
         std::vector<std::string> split_request_uri = RequestUtils::uri_route_split(request_uri, false);
         std::vector<std::string> split_uri_route = RequestUtils::uri_route_split(uri_route, false);
@@ -57,3 +61,8 @@ class RouteContext : public Php::Base {
         return Error::message::captureable_not_found();
     }   
 };
+
+
+        }
+    }
+}

@@ -26,17 +26,17 @@ class DefaultContainer {
      */
 
     public: Php::Object def_route_context() {
-        RouteContext *route_context = new RouteContext;
+        components::gate::route::c_route_context *route_context = new components::gate::route::c_route_context;
         return Php::Object("Fusion\\Components\\Gate\\Route\\Context", route_context);
     }
 
     public: Php::Object def_request() {
-        Request *request = new Request;
+        http::c_request *request = new http::c_request;
         return Php::Object("Fusion\\Http\\Request", request);
     }
     
     public: Php::Object def_constra() {
-        Constra *constra = new Constra;
+        views::c_constra *constra = new views::c_constra;
         return Php::Object("Fusion\\Views\\Constra", constra);
     }
 

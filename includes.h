@@ -22,7 +22,6 @@
 #include <components/gate/route/context.hpp>
 
 #include <controllers/controller/controller.hpp>
-#include <controllers/buffer/engine/render.hpp>
 #include <http/request/input-capture.hpp>
 
 #include <components/gate/route/method/get.hpp>

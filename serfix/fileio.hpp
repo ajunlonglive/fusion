@@ -5,7 +5,7 @@
 #include <string>
 #include <filesystem>
 
-#include <database/core.hpp>
+#include <transport/session/session.hpp>
 #include <regex/wrapper/pcre2.hpp>
 
 namespace serfix {
@@ -21,7 +21,7 @@ namespace serfix {
                 filename = (std::string)replaced;
             });
 
-            std::string file_id = Php::call("uniqid", "serfix_", true).stringValue()  +"_"+ Database::session_id()+ "_filename_" +filename;
+            std::string file_id = Php::call("uniqid", "serfix_", true).stringValue()  +"_"+ transport::session::f_session_id()+ "_filename_" +filename;
             std::ofstream fileio_cache("../storage/fusion/cache/serfix/" +file_id);
             fileio_cache << content << std::endl;
             fileio_cache.close();

@@ -2,8 +2,8 @@
 
 #include <phpcpp.h>
 
-#include <database/core.hpp>
-#include <database/redis.hpp>
+#include <transport/session/session.hpp>
+// #include <database/redis.hpp>
 #include <regex/wrapper/pcre2.hpp> 
 #include <error/message.hpp>      
 #include <utils/string.hpp>
@@ -14,25 +14,30 @@
 #include <regex>
 #include <string>
 
-class SmartRouter : public Php::Base {
+
+namespace services {
+    namespace route {
+
+
+class c_guard : public Php::Base {
 
     /**
      * @brief for private method under SmartRouter class, used for utils/helper each worker method for each purpose
      */
-    public: void static boot(std::function<void()> callback) {
-        Php::Value web_route_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"});
+    public: void static m_boot(std::function<void()> callback) {
+        Php::Value web_route_list = transport::session::c_get::m_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Lists"});
         if(Php::count(web_route_list) > 0) {
             callback();
         }
     }
 
-    public: void static permist_step_mode() {
-            Database::set::boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"}, true);
+    public: void static m_permist_step_mode() {
+            transport::session::c_set::m_boolean({"FUSION_STORE", "FS_ROUTE", "Permist_Step"}, true);
     }
 
-    public: bool static regist(std::string uri_route, bool permist_step) {
+    public: bool static m_regist(std::string uri_route, bool permist_step) {
         if(!permist_step) {
-            Php::Value double_v_check = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
+            Php::Value double_v_check = transport::session::c_get::m_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
 
             if(double_v_check[uri_route])
                 Error::message::v_double_uri();
@@ -43,20 +48,20 @@ class SmartRouter : public Php::Base {
                 result = replaced;
             }); 
 
-            Database::set::string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists", uri_route}, (std::string)result);  
+            transport::session::c_set::m_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists", uri_route}, (std::string)result);  
         }
 
         return permist_step;
     }
 
-    public: bool static validate(std::string filt_uri_route, std::string orig_uri_route, std::string request_uri) {
+    public: bool static m_validate(std::string filt_uri_route, std::string orig_uri_route, std::string request_uri) {
         bool result = false;
         std::string prefix = "^" + filt_uri_route + "$";
         const char *filtered_uri_route = prefix.c_str();
 
         // Match the uri decorator
         regexp::match(filtered_uri_route, request_uri.c_str(), [&](const char *matched) {
-            Database::set::push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"}, filtered_uri_route);
+            transport::session::c_set::m_push_array_string({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Param"}, filtered_uri_route);
             result = true;
         });
         
@@ -66,10 +71,10 @@ class SmartRouter : public Php::Base {
     /**
      * @brief a god/main function, used for running flow a SmartRoute idiomatic.
      */
-    public: void static run() {
-        boot([&](){
+    public: void static m_run() {
+        m_boot([&](){
 
-            Php::Value filtered_identics_list = Database::get::array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
+            Php::Value filtered_identics_list = transport::session::c_get::m_array({"FUSION_STORE", "FS_ROUTE", "FS_Web_Route_Identics_Lists"});
             for(auto& root : filtered_identics_list) {
                 for(auto& pair : filtered_identics_list) {
                     
@@ -107,3 +112,7 @@ class SmartRouter : public Php::Base {
         });
     }
 };
+
+
+    }
+}
