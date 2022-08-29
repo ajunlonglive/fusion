@@ -41,7 +41,8 @@ INI_DIR				=	/etc/php/7.4/fpm/conf.d
 #	this with a different fixed directory
 #
 
-EXTENSION_DIR		=	$(shell php-config --extension-dir)
+#EXTENSION_DIR		=	$(shell php-config --extension-dir)
+EXTENSION_DIR		=	"/usr/lib/php/20190902"
 
 
 #

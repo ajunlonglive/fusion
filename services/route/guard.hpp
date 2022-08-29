@@ -85,10 +85,13 @@ class c_guard : public Php::Base {
                         std::string pair_f = pair.second;
 
                         regexp::match(root_f.c_str(), pair_f.c_str(), [&](const char *matched) {
-                            Error::message::match_uri_identics();
+                            Php::out << "ERROR DAARI MANAAA??" << std::flush;
+                            // Error::message::match_uri_identics();
+                            Php::error << "match_uri_identics" << std::flush;
                         });
                     } else {
-                        Error::message::match_uri_identics();
+                        // Error::message::match_uri_identics();
+                        Php::error << "match_uri_identics" << std::flush;
                     }
 
                     // Step for indentification same/indentics param placeholder
