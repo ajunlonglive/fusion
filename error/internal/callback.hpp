@@ -38,6 +38,7 @@ namespace error {
 
         void fusion_php_error_handler(Php::Parameters &param) {
             Php::Value error = Php::call("error_get_last");
+          
             if (error["type"]) {
                 std::string error_html;
                 error_html += "<script>";

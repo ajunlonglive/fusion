@@ -68,7 +68,7 @@ class c_route_any : public Php::Base {
         Php::Value parsed_uri_route_list;
 
         // Escaping uri_route for doubling slash convert to single slash
-        std::string escape_uri_route = Regex::uri::escape_request_uri(uri_route + "/");
+        std::string escape_uri_route = regex::c_uri::m_escape_request_uri(uri_route + "/");
 
         // Get FS_REQUEST_URI from user client request
         // !FS_REQUEST_URI initialized coming from internal constructor Fusion

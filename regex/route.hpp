@@ -7,9 +7,9 @@
 #include <regex>
 
 
-namespace Regex {
-    class uri : public Php::Base {
-        public: std::string static escape_request_uri(std::string uri_route) {
+namespace regex {
+    class c_uri : public Php::Base {
+        public: std::string static m_escape_request_uri(std::string uri_route) {
             std::string filtered_result = uri_route + "/";
 
             // regexp::replace("(\\?.*)$", filtered_result.c_str(), "/", [&](const char *replaced) {

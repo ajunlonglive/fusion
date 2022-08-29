@@ -11,7 +11,7 @@ namespace cores {
 
     class c_autoload : public Php::Base {
         public: void static m_config(Php::Parameters &param) {
-            Construct::framework();
+            constructor::c_run::m_framework();
 
             if(Php::count(param) < 1)
                 Error::message::empty_autoload_config_param();
@@ -33,9 +33,15 @@ namespace cores {
             return void();
         }  
 
-        public: void static m_register() {
+        public: void static m_register_config() {
             // Register the config as startup used for require_src
-            cores::autoload::c_loader::m_boot();
+            cores::autoload::c_loader::m_framework_config();
+            return void();
+        }
+
+        public: void static m_register_app() {
+            // Register the config as startup used for require_src
+            cores::autoload::c_loader::m_default_app();
             return void();
         }
     };

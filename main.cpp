@@ -43,11 +43,14 @@ extern "C" {
 
 
         // Engine module dependencies
-        cores_engine.method<&cores::c_engine::m_framework>("Framework", {});
-        cores_engine.method<&cores::c_engine::m_run>("Run", {});
+        cores_engine.method<&cores::c_engine::m_framework>("framework", {});
+        cores_engine.method<&cores::c_engine::m_config>("config", {});
+        cores_engine.method<&cores::c_engine::m_run>("run", {});
+        
         // Autoload/Loader dependencies
-        cores_autoload.method<&cores::c_autoload::m_config>("Config", {});
-        cores_autoload.method<&cores::c_autoload::m_register>("Register", {});
+        cores_autoload.method<&cores::c_autoload::m_config>("config", {});
+        cores_autoload.method<&cores::c_autoload::m_register_config>("registConfig", {});
+        cores_autoload.method<&cores::c_autoload::m_register_app>("registApp", {});
 
 
         // HTTP Request dependencies

@@ -3,6 +3,7 @@
 #include <phpcpp.h>
 
 #include <transport/session/session.hpp>
+#include <http/request/utils.hpp>
 
 #include <iostream>
 
@@ -29,8 +30,8 @@ class c_route_context : public Php::Base {
 
         std::string request_uri = transport::session::c_get::m_string({"FUSION_STORE", "FS_ROUTE", "FS_REQUEST_URI"}); 
 
-        std::vector<std::string> split_request_uri = RequestUtils::uri_route_split(request_uri, false);
-        std::vector<std::string> split_uri_route = RequestUtils::uri_route_split(uri_route, false);
+        std::vector<std::string> split_request_uri = http::request::helper::f_uri_route_split(request_uri, false);
+        std::vector<std::string> split_uri_route = http::request::helper::f_uri_route_split(uri_route, false);
 
         Php::Value subject_uri = index_uri;
         Php::Value match_grouping_result;

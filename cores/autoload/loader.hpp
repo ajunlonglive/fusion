@@ -66,11 +66,18 @@ class c_loader : public Php::Base {
         
     }
 
-    public: void static m_boot() {
-        // Register the config as startup used for require_src
+ public: void static m_framework_config() {
+        // Register the framework config as startup used for require_src
         Php::Value app_config = transport::session::c_get::m_array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
         
         m_require_src(app_config["FS_Framework_Dir"]["Config"], true);   
+        
+    }
+
+
+    public: void static m_default_app() {
+        // Register the default_app config as startup used for require_src
+        Php::Value app_config = transport::session::c_get::m_array({"FUSION_STORE", "FS_AUTOLOAD_CONFIG"});
 
         m_require_src(app_config["FS_MVC_Client_Dir"]["Controllers"], true);   
         m_require_src(app_config["FS_MVC_Client_Dir"]["Models"], true);

@@ -29,7 +29,7 @@ class c_route : public Php::Base {
         // A Guard check if user really mean it for using Fusion framewok
         // When true (mean used it) is return nothing and non-blocking
         // But if false, is return internal PHP error exception and blocking
-        Construct::framework();
+        constructor::c_run::m_framework();
     }
 
     // Return singleton context (a declared object) when user use "get" method

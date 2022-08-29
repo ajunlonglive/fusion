@@ -15,31 +15,37 @@ namespace cores {
 
 class c_engine : public Php::Base {
     public: c_engine() {
-        Construct::framework();
+        constructor::c_run::m_framework();
     }   
 
     public: virtual ~c_engine() {}
 
     public: void static m_framework(Php::Parameters &param) {
         // Start local database for bridge communication
-        Construct::start_session_db();
+        constructor::c_run::m_start_session_db();
 
         // Start to initiliazed all variabled used for framework proccess
-        Construct::framework_init(param);
+        constructor::c_run::m_framework_init(param);
 
         // Start to initialized 
-        Construct::route_init();
+        constructor::c_run::m_route_init();
+
+    }
+
+    public: void static m_config(Php::Parameters &param) {
+        // Start to handle Internal Php Error with FusionErrorHandler
+        constructor::c_run::m_internal_error_handler();
     }
 
     public: void static m_run() {
         c_engine __construct;
         
-        // Start to handle Internal Php Error with FusionErrorHandler
-        Destruct::internal_error_handler();
+        // // Start to handle Internal Php Error with FusionErrorHandler
+        // destructor::c_run::m_internal_error_handler();
 
-        Destruct::route_init();
+        destructor::c_run::m_route_init();
 
-        Destruct::session_reset();
+        destructor::c_run::m_session_reset();
     }
 
 };

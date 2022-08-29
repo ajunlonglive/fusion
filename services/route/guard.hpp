@@ -93,7 +93,7 @@ class c_guard : public Php::Base {
 
                     // Step for indentification same/indentics param placeholder
                     std::string orig_uri_route = root.first;
-                    std::vector<std::string> orig_uri_route_split = utils::str_split("/", orig_uri_route.substr(1, orig_uri_route.length() - 2) );
+                    std::vector<std::string> orig_uri_route_split = utils::string::f_str_split("/", orig_uri_route.substr(1, orig_uri_route.length() - 2) );
                     std::vector<std::string> parsed_uri;
 
                     for(auto &orig_per : orig_uri_route_split) {

@@ -8,13 +8,19 @@
 #include <services/route/guard.hpp>
 #include <destructor/destructor.hpp>
 
-class Destruct : public Php::Base {
+#include <fstream>
+#include <filesystem>
+
+namespace destructor {
+
+
+class c_run : public Php::Base {
     /**
      * @brief As router initiliazed, default action for filter double route uri.
      *        Run first router initiliazed for capture double route uri, same data for validator later
      *        if same route uri was found, Fusion will thrown error and stop the code execute for else it will continue
      */
-    public: void static route_init() {
+    public: void static m_route_init() {
 
         // running first loader::route, grab all php files which include router config and aneccesary
         cores::autoload::c_loader::m_route();
@@ -47,20 +53,10 @@ class Destruct : public Php::Base {
         // RedisDb::flushall();
     }
 
-    public: void static internal_error_handler() {
-        
-        // When Serfix used for pre-parser to CGI, add data in dbcore to get actual script for error events
-        std::string app_path = Php::call("dirname", Php::call("realpath", "index.php"), 2);
-        transport::session::c_set::m_string({"FUSION_STORE", "FS_ERROR", "Filename"}, app_path);
-
-        // Get data for error handler use to
-        std::string php_error_handler = transport::session::c_get::m_string({"FUSION_STORE", "FS_ERROR", "Php_Error_Handler_Function"});
-
-        // Set register shutdown for function PhpErrorHandler, to catch all error events
-        Php::call("register_shutdown_function", php_error_handler);
-    }
-
-    public: void static session_reset() {
+    public: void static m_session_reset() {
         Php::call("session_destroy");
     }
 };
+
+
+}
