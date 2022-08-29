@@ -44,8 +44,8 @@ class c_container : public Php::Base {
         // Iterate all type for casting and pushing to dependencies group
         for(auto &p : get_param) {
             // Deprecated in PHP 7.1-7.4~ for ReflectionType::__toString(); if direct cast **->getType to string
-            // // Php::Value get_type = (p.second).call("getType");
-            // // depen_group.push_back(default_list( (std::string)get_type));
+            // Php::Value get_type = (p.second).call("getType");
+            // depen_group.push_back(m_get_dependency( (std::string)get_type));
 
             // Alternative, must call the getName for getType to casting name to string value
             Php::Value get_type = (p.second).call("getType");

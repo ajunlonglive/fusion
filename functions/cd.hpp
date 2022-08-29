@@ -66,15 +66,15 @@ void cd(Php::Parameters &param) {
     Php::Value main_data = param[0];
 
     if(Php::call("is_null", main_data).boolValue()) {
-        Php::out << "(null) " << main_data << std::flush;
+        Php::out << "(null)" << main_data << std::flush;
     }
     
     if(Php::call("is_string", main_data).boolValue()) {
-        Php::out << "string (" +std::to_string(main_data.length())+ ") \"" << main_data << "\"" << std::flush;
+        Php::out << "string(" +std::to_string(main_data.length())+ ") \"" << main_data << "\"" << std::flush;
     }
 
     if(Php::call("is_int", main_data).boolValue()) {
-        Php::out << "int (" << main_data << ")" << std::flush;
+        Php::out << "int(" << main_data << ")" << std::flush;
     }
 
     if(Php::call("is_array", main_data).boolValue() || Php::call("is_object", main_data).boolValue()) {
