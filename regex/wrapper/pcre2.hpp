@@ -16,7 +16,7 @@ class regexp: public Php::Base {
         PCRE2_UCHAR *result;
         PCRE2_SPTR pattern = reinterpret_cast<const unsigned char *>(pattern_v);
         PCRE2_SPTR subject = reinterpret_cast<const unsigned char *>(subject_v);   
-        pcre2_code *regexp = pcre2_compile(pattern, PCRE2_ZERO_TERMINATED, PCRE2_CASELESS | PCRE2_UTF | PCRE2_MULTILINE | PCRE2_DOTALL, &errorcode, &erroroffset, NULL);
+        pcre2_code *regexp = pcre2_compile(pattern, PCRE2_ZERO_TERMINATED, PCRE2_CASELESS | PCRE2_UTF, &errorcode, &erroroffset, NULL);
 
         if(regexp) {
             pcre2_match_data *match_data = pcre2_match_data_create_from_pattern(regexp, NULL);
@@ -46,7 +46,7 @@ class regexp: public Php::Base {
         const PCRE2_SPTR pattern = reinterpret_cast<const unsigned char *>(pattern_v);
         const PCRE2_SPTR replacement = reinterpret_cast<const unsigned char *>(replacement_v);
 
-        pcre2_code *re = pcre2_compile(pattern, PCRE2_ZERO_TERMINATED | PCRE2_MULTILINE | PCRE2_DOTALL, 0, &error, &erroffset, 0);
+        pcre2_code *re = pcre2_compile(pattern, PCRE2_ZERO_TERMINATED, 0, &error, &erroffset, 0);
         if (re == 0)
             return void();
 
