@@ -62,7 +62,7 @@ std::string array_parser(Php::Value array, int nbsp_space = 0, std::string index
     return buffer;
 }
 
-void cd(Php::Parameters &param) {
+void echos(Php::Parameters &param) {
     Php::Value main_data = param[0];
 
     if(Php::call("is_null", main_data).boolValue()) {

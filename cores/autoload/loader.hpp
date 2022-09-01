@@ -3,7 +3,7 @@
 
 #include <transport/session/session.hpp>
 #include <serfix/fileio.hpp>
-#include <serfix/parser.hpp>
+#include <serfix/compiler.hpp>
 
 #include <string>
 #include <functional>
@@ -34,14 +34,14 @@ class c_loader : public Php::Base {
         m_list_files(directory, [&](const std::string &path) {
             if(only_once) {
                 std::string source_code = serfix::fileio::read(path);
-                std::string replaced = serfix::parse::code(source_code);
+                std::string replaced = serfix::compile::code(source_code);
                 std::string file_id = serfix::fileio::write(path, replaced);
 
                 Php::require_once("../storage/fusion/cache/serfix/" +file_id);
                 serfix::fileio::unlink("../storage/fusion/cache/serfix/" +file_id);
             } else {
                 std::string source_code = serfix::fileio::read(path);
-                std::string replaced = serfix::parse::code(source_code);
+                std::string replaced = serfix::compile::code(source_code);
                 std::string file_id = serfix::fileio::write(path, replaced);
 
                 Php::require("../storage/fusion/cache/serfix/" +file_id);
