@@ -5,12 +5,10 @@
 #include <unordered_map>
 #include <algorithm>
 
-int main() {
+std::string compile(std::string content) {
     
-    std::ifstream ifs("file.php");
-    std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
 
-    content += " ";
+   content += " ";
 
     /**
      * @brief Using lexicar analysis for parsing code, but more simple
@@ -292,6 +290,5 @@ int main() {
 
     compiled_content += temp_compiled_content;
 
-    std::cout << compiled_content << std::endl;
-    return 0;
+    return compiled_content;
 }

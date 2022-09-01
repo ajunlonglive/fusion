@@ -113,6 +113,7 @@ extern "C" {
 
         extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
+        extension.add(Php::Constant("safe_html", "safe_html"));
 
         extension.add<cd>("cd");
         extension.add<reflector>("reflector");

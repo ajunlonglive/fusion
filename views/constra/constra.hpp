@@ -7,6 +7,7 @@
 #include <transport/session/session.hpp>
 #include <utils/function.hpp>
 #include <error/message.hpp>
+#include <views/constra/compiler.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -32,16 +33,16 @@ class c_constra : public Php::Base {
             Error::message::constra_too_much_arguments();
 
         if(Php::count(param) < 2) {
-            filename = (std::string)param[0];
+            filename = (std::string) param[0];
         } else {
-            variables = (Php::Value)param[1];
-            filename = (std::string)param[0];
+            variables = (Php::Value) param[1];
+            filename = (std::string) param[0];
         }
 
     }
 
     private: void get_file_resource() {
-        std::ifstream ifs("../app/Views/templates/" + filename + ".phtml");
+        std::ifstream ifs("../app/Views/templates/" + filename + ".chtml");
         std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
         render_resource = content;
     }
@@ -119,7 +120,9 @@ class c_constra : public Php::Base {
         regist_variable();
 
         // Do interpreter raw resource to finally work-code run
-        interprete_template();
+        // interprete_template();
+
+        render_resource = compile(render_resource);
 
         // Caching the work-code to cache file in user
         cache_resource_to_file();
@@ -128,9 +131,9 @@ class c_constra : public Php::Base {
         Php::require_once("../storage/fusion/cache/constra/" +file_id);
 
         // Remove current caches file, using session_id and prefix constra as parameter file name
-        std::filesystem::remove("../storage/fusion/cache/constra/" +file_id);
+        // std::filesystem::remove("../storage/fusion/cache/constra/" +file_id);
     }
 };
 
-
+    
 }
