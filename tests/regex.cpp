@@ -49,18 +49,18 @@ int main() {
     uint8_t *bytes;
     PCRE2_SIZE erroroffset;
     PCRE2_SIZE bytescount;
-    const pcre2_code *list_of_codes[1];
+    // const pcre2_code *list_of_codes[1];
 
-    PCRE2_SPTR pattern = reinterpret_cast<const unsigned char *>("^.*?\\s");
-    // PCRE2_SPTR pattern2 = reinterpret_cast<const unsigned char *>("second pattern");
+    // PCRE2_SPTR pattern = reinterpret_cast<const unsigned char *>("^.*?\\s");
+    // // PCRE2_SPTR pattern2 = reinterpret_cast<const unsigned char *>("second pattern");
 
-    list_of_codes[0] = pcre2_compile(pattern, PCRE2_ZERO_TERMINATED, PCRE2_CASELESS, &errorcode, &erroroffset, NULL);
-    // list_of_codes[1] = pcre2_compile(pattern2, PCRE2_ZERO_TERMINATED, PCRE2_CASELESS, &errorcode, &erroroffset, NULL);
-    errorcode = pcre2_serialize_encode(list_of_codes, 1, &bytes, &bytescount, NULL);
+    // list_of_codes[0] = pcre2_compile(pattern, PCRE2_ZERO_TERMINATED, PCRE2_CASELESS, &errorcode, &erroroffset, NULL);
+    // // list_of_codes[1] = pcre2_compile(pattern2, PCRE2_ZERO_TERMINATED, PCRE2_CASELESS, &errorcode, &erroroffset, NULL);
+    // errorcode = pcre2_serialize_encode(list_of_codes, 1, &bytes, &bytescount, NULL);
 
-    FILE* fd = fopen( "test.bin", "wb" );
-    errorcode = fwrite(bytes, 1, bytescount, fd);
-    fclose(fd);
+    // FILE* fd = fopen( "test.bin", "wb" );
+    // errorcode = fwrite(bytes, 1, bytescount, fd);
+    // fclose(fd);
 
     pcre2_code *decode_code;
 
@@ -95,7 +95,7 @@ int main() {
         pcre2_code_free(decode_code);
     } else {
         std::cout << "error bos" << std::endl;
-        PCRE2_UCHAR error[256];
+        PCRE2_UCHAR error[256]; 
         pcre2_get_error_message(errorcode, error, sizeof(error));
     }
 
