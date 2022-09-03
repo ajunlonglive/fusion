@@ -139,10 +139,14 @@ std::string compile(std::string content) {
     // Used for param to check current condition if compiler finding dynamic keyword
     bool current_find_dynamic_keyword = false;
 
+
+    // Main source for iterate each char
     for(std::size_t index_content = 0; index_content < content.size(); ++index_content) {
 
         if(index_content < (size_t)content_length) continue;
 
+
+        // Dynamic keyword reservoir
         if(current_find_dynamic_keyword) {
             for(std::size_t index_token_dynamic_keyword = 0; index_token_dynamic_keyword < token_dynamic_keyword.size(); ++index_token_dynamic_keyword) {
                 int index_token_dynamic_keyword_length = 0;
