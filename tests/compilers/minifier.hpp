@@ -20,9 +20,12 @@ namespace serfix {
          */
         if(used_other_serv) {
             if(*iterate_char == '\n') {
-                if(prefix != ' ' || suffix != ' ')
-                    *iterate_char = ' ';
-                    
+                if(prefix != ' ' || suffix != ' ') {
+                    *iterate_char = (char)0;
+                    return false;
+                }
+                
+                *iterate_char = ' ';
                 return true;
             }
 
