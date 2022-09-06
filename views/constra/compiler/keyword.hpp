@@ -6,98 +6,111 @@
 #include <algorithm>
 #include "utils.hpp"
 
-// std::vector<std::string> reserved_keyword = {
-//     "{{",
-//     "}}",
-//     "%php",
-//     "%ephp",
-
-//     "%if",
-//     "%else",
-//     "%eif",
-    
-//     "%for",
-//     "%efor",
-
-//     // Char pair for trigger of dynamic reserved keyword
-//     // Not actually reserved_keyword to actual_keyword
-//     " as ",
-// };
-
-std::vector<std::string> reserved_keyword = {
-    "<e ",
-    "<e>",
-    "</e>",
-    "<php>",
-    "</php>",
-
-    "<if",
-    "<else>",
-    "</if>",
-    
-    "<for",
-    "</for>",
-
-    // Char pair for trigger of dynamic reserved keyword
-    // Not actually reserved_keyword to actual_keyword
-    " as ",
-};
-
-// std::vector<std::string> dynamic_reserved_keyword_list = {
-//     "%for",
-// };
-
-std::vector<std::string> dynamic_reserved_keyword_list = {
-    "<for",
-};
-
-std::unordered_map<std::string, std::string> args_brace_echos;
-std::unordered_map<std::string, std::string> act_brace_char_phar;
-
-std::unordered_map<std::string, std::string> dynamic_reserved_keyword;
-
-std::vector<std::string> actual_keyword = {
-    "<?php echo(",
-    "<?php echo(",
-    "); ?>",
-    "<?php ",
-    " ?>",
-
-    "<?php if",
-    "<?php else; ?>",
-    "<?php endif; ?>",
-
-    "<?php for",
-    "<?php } ?>",
-
-    // Char pair for trigger of dynamic reserved keyword
-    // Not actually reserved_keyword to actual_keyword
-    " as ",
-};
-
-std::unordered_map<std::string, std::string> phar_keyword;
-
 namespace serfix {
     namespace keyword {
         void pair(int index_iterate_char, std::string resource_character, int *i_open_minim_phar,
                 std::string *b_open_minim_phar, std::string *s_open_minim_phar, std::string *b_open_minim_dynamic, std::string *s_args_brace_phar,
                 int *token_keyword_length, std::string *per_actual_keyword, std::string *per_actual_dynamic_keyword) {
             
+            // std::vector<std::string> reserved_keyword = {
+            //     "{{",
+            //     "}}",
+            //     "%php",
+            //     "%ephp",
+
+            //     "%if",
+            //     "%else",
+            //     "%eif",
+                
+            //     "%for",
+            //     "%efor",
+
+            //     // Char pair for trigger of dynamic reserved keyword
+            //     // Not actually reserved_keyword to actual_keyword
+            //     " as ",
+            // };
+
+            std::vector<std::string> reserved_keyword = {
+                "<%e ",
+                "<%e>",
+                "</%e>",
+                "<%php>",
+                "</%php>",
+
+                "<%if",
+                "<%else>",
+                "</%if>",
+                
+                "<%for",
+                "</%for>",
+
+                // Char pair for trigger of dynamic reserved keyword
+                // Not actually reserved_keyword to actual_keyword
+                " as ",
+            };
+
+            // std::vector<std::string> dynamic_reserved_keyword_list = {
+            //     "%for",
+            // };
+
+            std::vector<std::string> dynamic_reserved_keyword_list = {
+                "<%for",
+            };
+
+            std::unordered_map<std::string, std::string> args_brace_echos;
+
+            std::unordered_map<std::string, std::string> dynamic_reserved_keyword;
+
+            std::vector<std::string> actual_keyword = {
+                "<?php echo e(",
+                "<?php echo e(",
+                "); ?>",
+                "<?php ",
+                " ?>",
+
+                "<?php if",
+                "<?php else: ?>",
+                "<?php endif; ?>",
+
+                "<?php for",
+                "<?php } ?>",
+
+                // Char pair for trigger of dynamic reserved keyword
+                // Not actually reserved_keyword to actual_keyword
+                " as ",
+            };
+
+            std::unordered_map<std::string, std::string> phar_keyword;
+
             // phar_keyword["%if"]  = "): ?>";
             // phar_keyword["%for"] = ") { ?>";
 
-            phar_keyword["<if"]  = "): ?";
-            phar_keyword["<for"] = ") { ?";
+            phar_keyword["<%if"]  = "): ?";
+            phar_keyword["<%for"] = ") { ?";
 
             dynamic_reserved_keyword[" as "] = "each";
 
             // args_brace_echos["{{"] = "}}";
-            args_brace_echos["<e "] = "</e>";
+            // args_brace_echos["<e>"] = "</e>";
+            // args_brace_echos["<e "] = "</e>";
+            args_brace_echos["<%e "] = "</%e>";
 
+            std::unordered_map<std::string, std::string> act_brace_char_phar;
+            // act_brace_char_phar["|"] = ",";
             act_brace_char_phar[" "] = ",";
             act_brace_char_phar[">"] = ",";
 
+            // std::unordered_map<std::string, std::string> d_act_brace_char_phar;
+            // d_act_brace_char_phar[" >"] = ",";
+
             const char character = resource_character[index_iterate_char];
+
+            if( (*s_args_brace_phar) != "" && 
+                array_key_exists(act_brace_char_phar, std::string(1, resource_character[index_iterate_char-1])) &&
+                array_key_exists(act_brace_char_phar, std::string(1, resource_character[index_iterate_char])) ) {
+                    *token_keyword_length = 1;
+                return void();
+            }
 
             // When args_brace_phar is active, find the delimiter to actual replace keyword
             if( (*s_args_brace_phar) != "" && 
@@ -107,7 +120,7 @@ namespace serfix {
                 *token_keyword_length += (*per_actual_keyword).length();
                 return void();
             }
-            
+
             // When open_minim_phar is active, find the open and close phar to increase/decrement the current lenght of phar specific keyword
             // open_minim_phar can be use too for anonther events, such as dynamic reserved keyword to find trigger keyword
             if( (*b_open_minim_phar) == "true" && ( character == '(' || character == ')' )) {
@@ -156,11 +169,11 @@ namespace serfix {
 
             // The default reserved keyword along aside another events run
             // Will iterate each reserved keyword until same as char and length of keyword
-            for(int i_revkey = 0; i_revkey < reserved_keyword.size(); i_revkey++) {
+            for(int i_revkey = 0; (size_t)i_revkey < reserved_keyword.size(); i_revkey++) {
                 std::string per_word_of_keyrev = reserved_keyword[i_revkey];
 
                 // Will iterate each char of keyword
-                for(int i_char_revkey = 0; i_char_revkey < per_word_of_keyrev.size(); i_char_revkey++) {
+                for(int i_char_revkey = 0; (size_t)i_char_revkey < per_word_of_keyrev.size(); i_char_revkey++) {
                     const char per_char_of_keyrev = per_word_of_keyrev[i_char_revkey];
 
                     // Change the char of resource of code based iteration of reserved_keyword

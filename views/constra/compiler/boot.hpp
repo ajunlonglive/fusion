@@ -5,37 +5,38 @@
 #include "subfix.hpp"
 #include "keyword.hpp"
 
-char character;
-std::string compiled_code;
-std::string temp_compiled_code;
-std::string per_actual_keyword;
-std::string per_actual_dynamic_keyword;
+std::string compile(std::string resource_character) {
 
-std::string reserv_prefix;
-std::string reserv_suffix;
+    char character;
+    std::string compiled_code;
+    std::string temp_compiled_code;
+    std::string per_actual_keyword;
+    std::string per_actual_dynamic_keyword;
 
-bool space_annot            = false;
-bool html_phar_tag          = false;
-int         i_open_minim_phar    = 0;
-std::string s_open_minim_phar    = "";
-std::string s_args_brace_phar    = "";
-std::string b_open_minim_phar    = "false";
-std::string b_open_minim_dynamic = "false";
+    std::string reserv_prefix;
+    std::string reserv_suffix;
 
-int c_code_length = 0;
+    // bool space_annot            = false;
+    // bool html_phar_tag          = false;
+    int         i_open_minim_phar    = 0;
+    std::string s_open_minim_phar    = "";
+    std::string s_args_brace_phar    = "";
+    std::string b_open_minim_phar    = "false";
+    std::string b_open_minim_dynamic = "false";
 
-bool used_other_serv = false;
+    int c_code_length = 0;
 
-int main() {
+    // bool used_other_serv = false;
+
     // Add file to stream and buffer to memory
-    std::ifstream resource_code("file.php");
-    std::string resource_character( (std::istreambuf_iterator<char>(resource_code)), (std::istreambuf_iterator<char>()) );
+    // std::ifstream resource_code("file.php");
+    // std::string resource_character( (std::istreambuf_iterator<char>(resource_code)), (std::istreambuf_iterator<char>()) );
 
     // Adding white-space pre-content
     resource_character = " " +resource_character+ " ";
     
     // Iterate each character from resource_character
-    for(int index_character = 0; index_character < resource_character.size(); index_character++) {
+    for(int index_character = 0; (size_t)index_character < resource_character.size(); index_character++) {
 
         if(index_character < c_code_length) continue;
 
@@ -56,6 +57,8 @@ int main() {
             if(b_open_minim_phar    == "found") return;
             // If open_minim_dynamic active, return to break the flow
             if(b_open_minim_dynamic == "found") return;
+
+            if(s_args_brace_phar != "") return;
 
             // If token_keyword_length greater than 0, and prefix or suffix return false conditional
             // Reset per_actual_keyword and token_keyword_length to not concate wrong reserved keyword
@@ -106,7 +109,7 @@ int main() {
         if(b_open_minim_dynamic == "false") {
             // First and last char must be escaped, use compare to meet the condition
             // When given char is not begin and end of length, buffering to memory
-            if(index_character != 0 && index_character+1 < resource_character.size()) {
+            if(index_character != 0 && (size_t)(index_character+1) < resource_character.size()) {
                     compiled_code += character;
             }   
         } else {
@@ -118,8 +121,8 @@ int main() {
     
     compiled_code += temp_compiled_code;
 
-    std::cout << "\n\n" << std::endl;
-    std::cout << compiled_code << std::endl;
+    // std::cout << "\n\n" << std::endl;
+    // std::cout << compiled_code << std::endl;
 
-    return (int)false;
+    return compiled_code;
 }

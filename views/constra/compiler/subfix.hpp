@@ -5,16 +5,16 @@
 #include <functional>
 #include <algorithm>
 
-std::vector<std::string> prefix_list = {
-    "<",
-};
-
-std::vector<std::string> suffix_list = {
-    ">",
-};
-
 namespace serfix {
     void subfix(std::string resource_character, int index_character, int token_keyword_length, std::function<void (bool, bool)> callback) {
+        std::vector<std::string> prefix_list = {
+            "<",
+        };
+
+        std::vector<std::string> suffix_list = {
+            ">",
+        };
+
         if(token_keyword_length < 1)
             return;
 

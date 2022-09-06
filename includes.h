@@ -35,6 +35,7 @@
 #include <components/gate/route/method/method.hpp>
 
 #include <views/constra/constra.hpp>
+#include <views/constra/function.hpp>
 #include <cores/container/container.hpp>
 
 #include <functions/echos.hpp>

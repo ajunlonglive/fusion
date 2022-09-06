@@ -113,9 +113,12 @@ extern "C" {
 
         extension.add(Php::Constant("FS_DEFAULT", "FS_DEFAULT"));
         extension.add(Php::Constant("FS_COMPACT", "FS_COMPACT"));
-        extension.add(Php::Constant("safe_html", "safe_html"));
+        extension.add(Php::Constant("safe_html",  "htmlspecialchars"));
+        extension.add(Php::Constant("upper_case", "strtoupper"));
+        extension.add(Php::Constant("lower_case", "strtolower"));
 
         extension.add<echos>("echos");
+        extension.add<e>("e");
         extension.add<reflector>("reflector");
 
         // wrapped namespace, add to extension

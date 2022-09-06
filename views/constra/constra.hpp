@@ -7,7 +7,8 @@
 #include <transport/session/session.hpp>
 #include <utils/function.hpp>
 #include <error/message.hpp>
-#include <views/constra/compiler.hpp>
+// #include <views/constra/compiler.hpp>
+#include <views/constra/compiler/boot.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -42,7 +43,8 @@ class c_constra : public Php::Base {
     }
 
     private: void get_file_resource() {
-        std::ifstream ifs("../app/Views/templates/" + filename + ".chtml");
+        std::ifstream ifs("../app/Views/templates/" + filename + ".phtml");
+        // std::ifstream ifs("../app/Views/templates/index.chtml");
         std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
         render_resource = content;
     }
@@ -121,7 +123,6 @@ class c_constra : public Php::Base {
 
         // Do interpreter raw resource to finally work-code run
         // interprete_template();
-
         render_resource = compile(render_resource);
 
         // Caching the work-code to cache file in user
