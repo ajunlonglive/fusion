@@ -15,7 +15,6 @@
 #include <string>
 #include <filesystem>
 
-
 namespace views {
 
 
@@ -125,7 +124,7 @@ class c_constra : public Php::Base {
 
         // Do interpreter raw resource to finally work-code run
         // interprete_template();
-        render_resource = compile(render_resource);
+        render_resource = views::constra::f_compile(render_resource);
 
         render_resource += "\n<?php ob_end_flush(); ?>";
 
@@ -140,5 +139,5 @@ class c_constra : public Php::Base {
     }
 };
 
-    
+
 }

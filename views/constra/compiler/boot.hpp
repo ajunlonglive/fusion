@@ -5,7 +5,11 @@
 #include "subfix.hpp"
 #include "keyword.hpp"
 
-std::string compile(std::string resource_character) {
+namespace views {
+namespace constra {
+
+
+std::string f_compile(std::string resource_character) {
 
     char character;
     std::string compiled_code;
@@ -34,9 +38,12 @@ std::string compile(std::string resource_character) {
 
     // Adding white-space pre-content
     resource_character = " " +resource_character+ " ";
+
+    // Assign length of resource_character as size_t
+    size_t resource_character_size = resource_character.size();
     
     // Iterate each character from resource_character
-    for(int index_character = 0; (size_t)index_character < resource_character.size(); index_character++) {
+    for(int index_character = 0; (size_t)index_character < resource_character_size; index_character++) {
 
         if(index_character < c_code_length) continue;
 
@@ -126,3 +133,6 @@ std::string compile(std::string resource_character) {
 
     return compiled_code;
 }
+
+
+} }

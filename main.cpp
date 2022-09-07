@@ -118,8 +118,8 @@ extern "C" {
         extension.add(Php::Constant("lower_case", "strtolower"));
 
         extension.add<echos>("echos");
-        extension.add<constra_minifier>("constra_minifier");
-        extension.add<e>("e");
+        extension.add<views::constra::f_minifier>("constra_minifier");
+        extension.add<views::constra::f_e>("e");
         extension.add<reflector>("reflector");
 
         // wrapped namespace, add to extension

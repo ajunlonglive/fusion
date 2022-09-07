@@ -9,13 +9,17 @@
 
 #include <views/constra/compiler/utils.hpp>
 
-Php::Value constra_minifier(Php::Parameters &param) {
+namespace views {
+namespace constra {
+
+
+Php::Value f_minifier(Php::Parameters &param) {
     std::string content = (Php::Value)param[0];
     
-    return minifier(content);
+    return views::constra::compiler::f_minifier(content);
 }
 
-Php::Value e(Php::Parameters &param) {
+Php::Value f_e(Php::Parameters &param) {
     Php::Value params = param;
     Php::Value content = params[params.size() - (size_t)1];
 
@@ -26,3 +30,6 @@ Php::Value e(Php::Parameters &param) {
 
     return content;
 }
+
+
+} }
