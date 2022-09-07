@@ -60,6 +60,8 @@ class c_constra : public Php::Base {
             variable_parse += "$" +(std::string)variable.first+ " = $variables['" +(std::string)variable.first+ "'];\n";
         }
 
+        variable_parse += "ob_start(\"constra_minifier\");\n";
+
         variable_parse += "?>";
 
         starter += variable_parse;
@@ -124,6 +126,8 @@ class c_constra : public Php::Base {
         // Do interpreter raw resource to finally work-code run
         // interprete_template();
         render_resource = compile(render_resource);
+
+        render_resource += "\n<?php ob_end_flush(); ?>";
 
         // Caching the work-code to cache file in user
         cache_resource_to_file();

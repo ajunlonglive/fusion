@@ -5,7 +5,15 @@
 
 #include <phpcpp.h>
 
+#include "compiler/minifier.hpp"
+
 #include <views/constra/compiler/utils.hpp>
+
+Php::Value constra_minifier(Php::Parameters &param) {
+    std::string content = (Php::Value)param[0];
+    
+    return minifier(content);
+}
 
 Php::Value e(Php::Parameters &param) {
     Php::Value params = param;
