@@ -124,8 +124,11 @@ class c_constra : public Php::Base {
 
         // Do interpreter raw resource to finally work-code run
         // interprete_template();
+
+        // Testing new native compiler
         render_resource = views::constra::f_compile(render_resource);
 
+        // Adding to buffering temporare rendered
         render_resource += "\n<?php ob_end_flush(); ?>";
 
         // Caching the work-code to cache file in user
