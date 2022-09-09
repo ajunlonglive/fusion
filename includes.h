@@ -1,5 +1,3 @@
-#pragma once
-
 /**
  * @file include.h
  * @author Sultan Ilham (me@onecthree.id)
