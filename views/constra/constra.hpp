@@ -125,7 +125,7 @@ class c_constra : public Php::Base {
         // Do interpreter raw resource to finally work-code run
         // interprete_template();
 
-        // Testing new native compiler
+        // Testing new native compiler from regex
         render_resource = views::constra::f_compile(render_resource);
 
         // Adding to buffering temporare rendered
