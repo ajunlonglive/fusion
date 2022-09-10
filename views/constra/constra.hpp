@@ -131,7 +131,7 @@ class c_constra : public Php::Base {
         // Adding to buffering temporare rendered
         render_resource += "\n<?php ob_end_flush(); ?>";
 
-        // Caching the work-code to cache file in user
+        // Caching the work-code to cache file in user client
         cache_resource_to_file();
 
         // Calling the caches file
