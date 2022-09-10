@@ -138,6 +138,7 @@ class c_constra : public Php::Base {
         Php::require_once("../storage/fusion/cache/constra/" +file_id);
 
         // Remove current caches file, using session_id and prefix constra as parameter file name
+        // But when throw error exception it will fail
         std::filesystem::remove("../storage/fusion/cache/constra/" +file_id);
     }
 };
