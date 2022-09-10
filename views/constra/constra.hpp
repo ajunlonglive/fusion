@@ -132,6 +132,7 @@ class c_constra : public Php::Base {
         render_resource += "\n<?php ob_end_flush(); ?>";
 
         // Caching the work-code to cache file in user client
+        // Use the caches file as native PHP file
         cache_resource_to_file();
 
         // Calling the caches file
